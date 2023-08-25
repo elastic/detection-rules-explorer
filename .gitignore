@@ -1,0 +1,32 @@
+# Junk and IDE stuff
+*.bak
+*.iml
+*.orig
+*.rej
+*.swp
+*~
+.DS_Store
+.idea
+.vim/.netrwhist
+yarn-error.log
+.eslintcache
+
+# Files in here are copied by the build
+public/themes
+
+node_modules
+.next
+
+# Default `next export` output directory
+out
+
+# TypeScript cache
+tsconfig.tsbuildinfo
+
+#Bring back lib that is ignored at the top-level
+!lib
+
+#calculated rule data
+src/data/**
+parseRuleData.js
+~

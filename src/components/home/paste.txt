@@ -1,0 +1,51 @@
+
+    <EuiFlexItem css={styles.item}>
+    <EuiPanel>
+      <EuiText>
+        <p>
+          <b>{rule.name}</b>
+        </p>
+      </EuiText>
+      <EuiSpacer size="xs" />
+      {rule.tags.map((t, j) => {
+        let color = 'hollow';
+        let icon = '';
+        if (t.startsWith('Domain')) {
+          color = 'accent';
+          icon = 'globe';
+        }
+        if (t.startsWith('Use Case')) {
+          color = 'primary';
+          icon = 'launch';
+        }
+        if (t.startsWith('Data Source')) {
+          color = 'default';
+          icon = 'database';
+        }
+        if (t.startsWith('OS')) {
+          color = 'success';
+          icon = 'compute';
+        }
+        if (t.startsWith('Tactic')) {
+          color = 'warning';
+          icon = 'bug';
+        }
+        return (
+          <EuiBadge
+            iconType={icon}
+            color={color}
+            css={styles.badge}
+            key={j}>
+            {t}
+          </EuiBadge>
+        );
+      })}
+      <EuiSpacer size="xs" />
+      <EuiText size="xs">
+        <p>
+          <em>Updated {moment(rule.updated_date).fromNow()}</em>
+        </p>
+      </EuiText>
+    </EuiPanel>
+  </EuiFlexItem>
+  );
