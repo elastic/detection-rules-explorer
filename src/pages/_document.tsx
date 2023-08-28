@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
-import ReactGA from 'react-ga4';
-
 import { defaultTheme, Theme, themeConfig } from '../lib/theme';
 
 const pathPrefix = process.env.PATH_PREFIX;
@@ -29,8 +27,6 @@ function themeLink(theme: Theme): ReactElement {
     />
   );
 }
-
-ReactGA.initialize('G-7P2FQG4KX0');
 
 /**
  * A custom `Document` is commonly used to augment your application's
