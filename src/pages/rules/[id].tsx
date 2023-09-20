@@ -155,9 +155,9 @@ export default function RuleDetails({
   const packName =
     rule.metadata.source_integration_name ||
     'Prebuilt Security Detection Rules';
-  const packLink = `https://docs.elastic.co/en/integrations/${
-    rule.metadata.source_integration || 'security_detection_engine'
-  }`;
+  const packLink = rule.metadata.source_integration
+    ? `https://docs.elastic.co/en/integrations/${rule.metadata.source_integration}`
+    : `https://www.elastic.co/guide/en/security/current/prebuilt-rules-management.html`;
 
   const definitionItems = [
     {
