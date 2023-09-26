@@ -69,7 +69,10 @@ async function getPrebuiltDetectionRules(
   const parser = res.data.pipe(new tar.Parse());
   parser.on('entry', entry => {
     if (
-      entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) &&
+      (entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) ||
+        entry.path.match(
+          /^elastic-detection-rules-.*\/rules_building_block\/.*\.toml$/
+        )) &&
       !entry.path.match(/\/_deprecated\//)
     ) {
       const contentStream = new PassThrough();
