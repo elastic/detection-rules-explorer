@@ -48,7 +48,7 @@ There are two branches in this repository:
  - `main` - stores the source code for the site
  - `gh-pages` - stores the compiled site source for publishing
 
-On merge to `main`, a Github action (at ``.github/workflows/gh-pages.yml`) will build the site and push it to the `gh-pages` branch. From there, another Github action (auto-configured by Github) will publish the updates to the internet at https://elastic.github.io/detection-rules-explorer.
+On merge to `main`, a Github action (at `.github/workflows/gh-pages.yml`) will build the site and push it to the `gh-pages` branch. From there, another Github action (auto-configured by Github) will publish the updates to the internet at https://elastic.github.io/detection-rules-explorer.
 
 ## Learn More
 
