@@ -169,25 +169,6 @@ async function precomputeRuleSummaries() {
   fs.mkdirSync(RULES_OUTPUT_PATH, { recursive: true });
 
   await getPrebuiltDetectionRules(ruleSummaries, tagSummaries);
-  await getPackageRules('dga', 'DGA', ruleSummaries, tagSummaries);
-  await getPackageRules(
-    'ded',
-    'Data Exfiltration Detection',
-    ruleSummaries,
-    tagSummaries
-  );
-  await getPackageRules(
-    'lmd',
-    'Lateral Movement Detection',
-    ruleSummaries,
-    tagSummaries
-  );
-  await getPackageRules(
-    'problemchild',
-    'Living off the Land Attack Detection',
-    ruleSummaries,
-    tagSummaries
-  );
 
   console.log(`loaded ${ruleSummaries.length} rules`);
   console.log(`example rule:`);
