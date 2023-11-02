@@ -197,17 +197,19 @@ export default function RuleDetails({
     },
     {
       title: 'Related Integrations',
-      description:
-        rule.metadata.integration &&
-        rule.metadata.integration.map((x, i) => (
-          <p key={i}>
-            <EuiLink
-              target="_blank"
-              href={`https://docs.elastic.co/en/integrations/${x}`}>
-              {x}
-            </EuiLink>
-          </p>
-        )),
+      description: [
+        ...(Array.isArray(rule.metadata.integration)
+          ? rule.metadata.integration
+          : [rule.metadata.integration]),
+      ].map((x, i) => (
+        <p key={i}>
+          <EuiLink
+            target="_blank"
+            href={`https://docs.elastic.co/en/integrations/${x}`}>
+            {x}
+          </EuiLink>
+        </p>
+      )),
     },
     {
       title: 'Query',
