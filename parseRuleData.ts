@@ -43,12 +43,14 @@ async function getPrebuiltDetectionRules(
   let count = 0;
   type Technique = {
     id: string;
+    name: string;
     reference: string;
     subtechnique?: { id: string; reference: string }[];
   };
   
   type Tactic = {
     id: string;
+    name: string;
     reference: string;
   };
   
@@ -67,8 +69,10 @@ async function getPrebuiltDetectionRules(
           framework: "MITRE ATT&CK",
           tactic: {
             id: item,
+            name: "",
             reference: `https://attack.mitre.org/tactics/${item}/`,
           },
+          technique: [], // Ensure technique is an empty array if not present
         });
       } else if (item.startsWith('T')) {
         const parts = item.split('.');
@@ -77,6 +81,7 @@ async function getPrebuiltDetectionRules(
     
         const technique: Technique = {
           id: techniqueId,
+          name: "",
           reference: `https://attack.mitre.org/techniques/${techniqueId}/`,
         };
     
@@ -89,10 +94,21 @@ async function getPrebuiltDetectionRules(
           ];
         }
     
-        threat.push({
-          framework: "MITRE ATT&CK",
-          technique: [technique],
-        });
+        // Find the last added threat with a tactic to add the technique to it
+        const lastThreat = threat[threat.length - 1];
+        if (lastThreat && lastThreat.tactic && lastThreat.technique) {
+          lastThreat.technique.push(technique);
+        } else {
+          threat.push({
+            framework: "MITRE ATT&CK",
+            tactic: {
+              id: "",
+              name: "",
+              reference: "",
+            },
+            technique: [technique],
+          });
+        }
       }
     });
   
@@ -104,74 +120,53 @@ async function getPrebuiltDetectionRules(
   
     // Check if ruleContent.rule and ruleContent.hunt exist
     const ruleId = ruleContent.rule?.rule_id || ruleContent.hunt?.uuid;
-  
     if (!ruleId) {
       throw new Error('Neither rule_id nor hunt.uuid is available');
     }
   
+    // Initialize ruleContent.rule and ruleContent.metadata if they are undefined
+    ruleContent.rule = ruleContent.rule || {};
+    ruleContent.metadata = ruleContent.metadata || {};
+  
+    // Helper function to set default values if they do not exist
+    const setDefault = (obj, key, defaultValue) => {
+      if (!obj[key]) {
+        obj[key] = defaultValue;
+      }
+    };
+  
     // Use default tags if ruleContent.rule.tags does not exist
-    const tags = ruleContent.rule?.tags || ["Hunt Type: Hunt"];
+    const tags = ruleContent.rule.tags || ["Hunt Type: Hunt"];
+    setDefault(ruleContent.rule, 'tags', ["Hunt Type: Hunt"]);
   
-    // Add default tags to ruleContent.rule.tags if it does not exist
-    if (!ruleContent.rule?.tags) {
-      ruleContent.rule = {
-        ...ruleContent.rule,
-        tags: ["Hunt Type: Hunt"],
-      };
-    }
-  
-    // Add creation_date if it does not exist
-    if (!ruleContent.metadata?.creation_date) {
-      ruleContent.metadata = {
-        ...ruleContent.metadata,
-        creation_date: new Date(0).toISOString(),
-      };
-    }
-  
-    // Add updated_date if it does not exist
-    if (!ruleContent.metadata?.updated_date) {
-      ruleContent.metadata = {
-        ...ruleContent.metadata,
-        updated_date: new Date(0).toISOString(),
-      };
-    }
+    // Add creation_date and updated_date if they do not exist
+    const defaultDate = new Date(0).toISOString();
+    setDefault(ruleContent.metadata, 'creation_date', defaultDate);
+    setDefault(ruleContent.metadata, 'updated_date', defaultDate);
   
     // Use current date as default updated_date if it does not exist
     const updatedDate = new Date(ruleContent.metadata.updated_date.replace(/\//g, '-'));
   
     // Use hunt.name if rule.name does not exist
-    const ruleName = ruleContent.rule?.name || ruleContent.hunt?.name || 'Unknown Rule';
+    const ruleName = ruleContent.rule.name || ruleContent.hunt.name || 'Unknown Rule';
   
-    // Set ruleContent.metadata.integration if it does not exist
-    if (!ruleContent.metadata?.integration && ruleContent.hunt?.integration) {
-      ruleContent.metadata = {
-        ...ruleContent.metadata,
-        integration: ruleContent.hunt.integration,
-      };
-    }
-  
-    // Set ruleContent.rule.query if it does not exist
-    if (!ruleContent.rule?.query && ruleContent.hunt?.query) {
-      ruleContent.rule = {
-        ...ruleContent.rule,
-        query: ruleContent.hunt.query,
-      };
-    }
-  
-    // Set ruleContent.rule.license to "Elastic License v2" if it does not exist
-    if (!ruleContent.rule?.license) {
-      ruleContent.rule = {
-        ...ruleContent.rule,
-        license: "Elastic License v2",
-      };
-    }
-  
-    // Set ruleContent.rule.description if it does not exist
-    if (!ruleContent.rule?.description && ruleContent.hunt?.description) {
-      ruleContent.rule = {
-        ...ruleContent.rule,
-        description: ruleContent.hunt.description,
-      };
+    // Set other default values if they do not exist
+    setDefault(ruleContent.metadata, 'integration', ruleContent.hunt?.integration);
+    setDefault(ruleContent.rule, 'query', ruleContent.hunt?.query);
+    setDefault(ruleContent.rule, 'license', "Elastic License v2");
+    setDefault(ruleContent.rule, 'description', ruleContent.hunt?.description);
+
+    // // Print out rule.threat if it exists
+    // if (ruleContent.rule.threat) {
+    //   console.log('rule.threat:', JSON.stringify(ruleContent.rule.threat, null, 2));
+    // }
+    // Convert hunt.mitre to rule.threat if hunt.mitre exists
+    if (ruleContent.hunt?.mitre) {
+      ruleContent.rule.threat = convertHuntMitre(ruleContent.hunt.mitre);
+        // Print out rule.threat if it exists
+        if (ruleContent.rule.threat) {
+          console.log('rule.threat:', JSON.stringify(ruleContent.rule.threat, null, 2));
+        }
     }
   
     ruleSummaries.push({
