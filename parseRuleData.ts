@@ -156,17 +156,9 @@ async function getPrebuiltDetectionRules(
     setDefault(ruleContent.rule, 'license', "Elastic License v2");
     setDefault(ruleContent.rule, 'description', ruleContent.hunt?.description);
 
-    // // Print out rule.threat if it exists
-    // if (ruleContent.rule.threat) {
-    //   console.log('rule.threat:', JSON.stringify(ruleContent.rule.threat, null, 2));
-    // }
     // Convert hunt.mitre to rule.threat if hunt.mitre exists
     if (ruleContent.hunt?.mitre) {
       ruleContent.rule.threat = convertHuntMitre(ruleContent.hunt.mitre);
-        // Print out rule.threat if it exists
-        if (ruleContent.rule.threat) {
-          console.log('rule.threat:', JSON.stringify(ruleContent.rule.threat, null, 2));
-        }
     }
   
     ruleSummaries.push({
