@@ -15,10 +15,6 @@ export const ruleFilterTypeMap = {
     color: 'default',
     icon: 'eye',
   },
-  Language: {
-    color: 'default',
-    icon: 'menu',
-  },
   OS: {
     color: 'success',
     icon: 'compute',
