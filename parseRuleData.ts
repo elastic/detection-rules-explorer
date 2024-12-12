@@ -99,61 +99,99 @@ async function getPrebuiltDetectionRules(
     return threat;
   };
 
-const addRule = function (buffer) {
-  const ruleContent = toml.parse(buffer);
-
-  // Check if ruleContent.rule and ruleContent.hunt exist
-  const ruleId = ruleContent.rule?.rule_id || ruleContent.hunt?.uuid;
-  if (!ruleId) {
-    throw new Error('Neither rule_id nor hunt.uuid is available');
-  }
-
-  // Helper function to set default values if they do not exist
-  const setDefault = (obj, key, defaultValue) => {
-    if (!obj[key]) {
-      obj[key] = defaultValue;
+  const addRule = function (buffer) {
+    const ruleContent = toml.parse(buffer);
+  
+    // Check if ruleContent.rule and ruleContent.hunt exist
+    const ruleId = ruleContent.rule?.rule_id || ruleContent.hunt?.uuid;
+  
+    if (!ruleId) {
+      throw new Error('Neither rule_id nor hunt.uuid is available');
     }
+  
+    // Use default tags if ruleContent.rule.tags does not exist
+    const tags = ruleContent.rule?.tags || ["Hunt Type: Hunt"];
+  
+    // Add default tags to ruleContent.rule.tags if it does not exist
+    if (!ruleContent.rule?.tags) {
+      ruleContent.rule = {
+        ...ruleContent.rule,
+        tags: ["Hunt Type: Hunt"],
+      };
+    }
+  
+    // Add creation_date if it does not exist
+    if (!ruleContent.metadata?.creation_date) {
+      ruleContent.metadata = {
+        ...ruleContent.metadata,
+        creation_date: new Date(0).toISOString(),
+      };
+    }
+  
+    // Add updated_date if it does not exist
+    if (!ruleContent.metadata?.updated_date) {
+      ruleContent.metadata = {
+        ...ruleContent.metadata,
+        updated_date: new Date(0).toISOString(),
+      };
+    }
+  
+    // Use current date as default updated_date if it does not exist
+    const updatedDate = new Date(ruleContent.metadata.updated_date.replace(/\//g, '-'));
+  
+    // Use hunt.name if rule.name does not exist
+    const ruleName = ruleContent.rule?.name || ruleContent.hunt?.name || 'Unknown Rule';
+  
+    // Set ruleContent.metadata.integration if it does not exist
+    if (!ruleContent.metadata?.integration && ruleContent.hunt?.integration) {
+      ruleContent.metadata = {
+        ...ruleContent.metadata,
+        integration: ruleContent.hunt.integration,
+      };
+    }
+  
+    // Set ruleContent.rule.query if it does not exist
+    if (!ruleContent.rule?.query && ruleContent.hunt?.query) {
+      ruleContent.rule = {
+        ...ruleContent.rule,
+        query: ruleContent.hunt.query,
+      };
+    }
+  
+    // Set ruleContent.rule.license to "Elastic License v2" if it does not exist
+    if (!ruleContent.rule?.license) {
+      ruleContent.rule = {
+        ...ruleContent.rule,
+        license: "Elastic License v2",
+      };
+    }
+  
+    // Set ruleContent.rule.description if it does not exist
+    if (!ruleContent.rule?.description && ruleContent.hunt?.description) {
+      ruleContent.rule = {
+        ...ruleContent.rule,
+        description: ruleContent.hunt.description,
+      };
+    }
+  
+    ruleSummaries.push({
+      id: ruleId,
+      name: ruleName,
+      tags: tags,
+      updated_date: updatedDate,
+    });
+  
+    for (const t of tags) {
+      addTagSummary(t, tagSummaries);
+    }
+  
+    fs.writeFileSync(
+      `${RULES_OUTPUT_PATH}${ruleId}.json`,
+      JSON.stringify(ruleContent)
+    );
+  
+    count++;
   };
-
-  // Use default tags if ruleContent.rule.tags does not exist
-  const tags = ruleContent.rule?.tags || ["Hunt Type: Hunt"];
-  setDefault(ruleContent.rule, 'tags', ["Hunt Type: Hunt"]);
-
-  // Add creation_date and updated_date if they do not exist
-  const defaultDate = new Date(0).toISOString();
-  setDefault(ruleContent.metadata, 'creation_date', defaultDate);
-  setDefault(ruleContent.metadata, 'updated_date', defaultDate);
-
-  // Use current date as default updated_date if it does not exist
-  const updatedDate = new Date(ruleContent.metadata.updated_date.replace(/\//g, '-'));
-
-  // Use hunt.name if rule.name does not exist
-  const ruleName = ruleContent.rule?.name || ruleContent.hunt?.name || 'Unknown Rule';
-
-  // Set other default values if they do not exist
-  setDefault(ruleContent.metadata, 'integration', ruleContent.hunt?.integration);
-  setDefault(ruleContent.rule, 'query', ruleContent.hunt?.query);
-  setDefault(ruleContent.rule, 'license', "Elastic License v2");
-  setDefault(ruleContent.rule, 'description', ruleContent.hunt?.description);
-
-  ruleSummaries.push({
-    id: ruleId,
-    name: ruleName,
-    tags: tags,
-    updated_date: updatedDate,
-  });
-
-  for (const t of tags) {
-    addTagSummary(t, tagSummaries);
-  }
-
-  fs.writeFileSync(
-    `${RULES_OUTPUT_PATH}${ruleId}.json`,
-    JSON.stringify(ruleContent)
-  );
-
-  count++;
-};
 
   const githubRulesTarballUrl =
     'https://api.github.com/repos/elastic/detection-rules/tarball';
