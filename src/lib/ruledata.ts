@@ -27,4 +27,8 @@ export const ruleFilterTypeMap = {
     color: 'hollow',
     icon: 'layers',
   },
+  Language: {
+    color: 'default',
+    icon: 'menu',
+  },
 };

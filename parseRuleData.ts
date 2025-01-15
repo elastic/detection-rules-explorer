@@ -138,7 +138,13 @@ async function getPrebuiltDetectionRules(
     // Use default tags if ruleContent.rule.tags does not exist
     const tags = ruleContent.rule.tags || ["Hunt Type: Hunt"];
     setDefault(ruleContent.rule, 'tags', ["Hunt Type: Hunt"]);
-  
+
+    // Add a tag based on the language
+    const language = ruleContent.rule?.language;
+    if (language) {
+      tags.push(`Language: ${language}`);
+    }
+
     // Add creation_date and updated_date if they do not exist
     const defaultDate = new Date(0).toISOString();
     setDefault(ruleContent.metadata, 'creation_date', defaultDate);

@@ -159,6 +159,13 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
             tagFilter={tagFilter}
             onTagChange={onTagChange}
           />
+          <RuleFilter
+            displayName="Rule Languages"
+            icon="menu"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Language')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
         </EuiFlexGrid>
       </EuiFlexItem>
     </EuiFlexGroup>
