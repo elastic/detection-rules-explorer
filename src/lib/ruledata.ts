@@ -11,6 +11,10 @@ export const ruleFilterTypeMap = {
     color: 'default',
     icon: 'database',
   },
+  'Hunt Type': {
+    color: 'default',
+    icon: 'eye',
+  },
   OS: {
     color: 'success',
     icon: 'compute',
@@ -22,5 +26,9 @@ export const ruleFilterTypeMap = {
   'Rule Type': {
     color: 'hollow',
     icon: 'layers',
+  },
+  Language: {
+    color: 'default',
+    icon: 'menu',
   },
 };
