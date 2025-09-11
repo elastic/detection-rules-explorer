@@ -4,7 +4,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: bifrost
+  name: Detection-rules-explorer
   description: A web explorer for Detection Rules
   annotations:
     backstage.io/source-location: "url:https://github.com/elastic/Detection-rules-explorer/"
