@@ -102,7 +102,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
         </EuiFormRow>
         <EuiSpacer size="m" />
 
-        <EuiFlexGrid css={styles.grid}>
+        <EuiFlexGrid columns={3} css={styles.grid}>
           <RuleFilter
             displayName="Domains"
             icon="globe"
