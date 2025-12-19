@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useRef } from 'react';
+import { FunctionComponent, useState, useRef, ReactNode } from 'react';
 import {
   EuiFlexGroup,
   EuiFlexItem,
@@ -27,6 +27,7 @@ interface RuleFilterProps {
   tagFilter: string[];
   onSearchChange: (e: string) => void;
   onTagChange: (type: string, selected: string[]) => void;
+  children?: ReactNode;
 }
 
 const HomeHero: FunctionComponent<RuleFilterProps> = ({

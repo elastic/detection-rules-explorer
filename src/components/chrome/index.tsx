@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 
 import { EuiProvider, EuiThemeColorMode } from '@elastic/eui';
 
@@ -6,10 +6,15 @@ import { useTheme } from '../theme';
 
 import createCache from '@emotion/cache';
 
+// Explicit interface for props required by Typescript 5+
+interface ChromeProps {
+  children: ReactNode;
+}
+
 /**
  * Renders the UI that surrounds the page content.
  */
-const Chrome: FunctionComponent = ({ children }) => {
+const Chrome: FunctionComponent<ChromeProps> = ({ children }) => {
   const { colorMode } = useTheme();
 
   /**

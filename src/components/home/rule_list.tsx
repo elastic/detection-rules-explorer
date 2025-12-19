@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useMemo, ReactNode } from 'react';
 import { EuiFlexGrid, EuiCallOut } from '@elastic/eui';
 import { ruleListStyles } from './rule_list.styles';
 import { useEuiTheme } from '@elastic/eui';
@@ -9,6 +9,7 @@ import { RuleSummary } from '../../types';
 
 interface RuleListProps {
   rules: RuleSummary[];
+  children?: ReactNode;
 }
 
 const MAX_RULES = 100;
