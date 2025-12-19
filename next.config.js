@@ -22,6 +22,7 @@ const pathPrefix = usePathPrefix ? derivePathPrefix() : '';
 const themeConfig = buildThemeConfig();
 
 const nextConfig = {
+  output: 'export',
   compiler: {
     emotion: true,
   },
