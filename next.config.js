@@ -98,11 +98,11 @@ const nextConfig = {
         new CopyWebpackPlugin({ patterns: themeConfig.copyConfig })
       );
     }
-    
-    // Moment ships with a large number of locales. Exclude them, leaving
-    // just the default English locale. If you need other locales, see:
-    // https://create-react-app.dev/docs/troubleshooting/#momentjs-locales-are-missing
+
     config.plugins.push(
+      // Moment ships with a large number of locales. Exclude them, leaving
+      // just the default English locale. If you need other locales, see:
+      // https://create-react-app.dev/docs/troubleshooting/#momentjs-locales-are-missing
       new IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
