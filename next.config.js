@@ -92,10 +92,14 @@ const nextConfig = {
       };
     }
 
-    // Copy theme CSS files into `public`
-    config.plugins.push(
-      new CopyWebpackPlugin({ patterns: themeConfig.copyConfig }),
+    // Copy theme CSS files into `public` only if they exist
+    if (Array.isArray(themeConfig.copyConfig) && themeConfig.copyConfig.length > 0) {
+      config.plugins.push(
+        new CopyWebpackPlugin({ patterns: themeConfig.copyConfig })
+      );
+    }
 
+    config.plugins.push(
       // Moment ships with a large number of locales. Exclude them, leaving
       // just the default English locale. If you need other locales, see:
       // https://create-react-app.dev/docs/troubleshooting/#momentjs-locales-are-missing

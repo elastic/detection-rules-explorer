@@ -34,7 +34,6 @@ const Header = () => {
               </a>
             </Link>,
           ],
-          borders: 'none',
         },
         {
           items: [
@@ -45,7 +44,6 @@ const Header = () => {
               </EuiHeaderSectionItemButton>
             </EuiToolTip>,
           ],
-          borders: 'none',
         },
       ]}
     />

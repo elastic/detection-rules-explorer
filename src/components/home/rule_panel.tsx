@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import {
   EuiBadge,
   EuiFlexItem,
@@ -18,6 +18,7 @@ import { ruleFilterTypeMap } from '../../lib/ruledata';
 
 interface RulePanelProps {
   rule: RuleSummary;
+  children?: ReactNode;
 }
 
 const RulePanel: FunctionComponent<RulePanelProps> = ({ children, rule }) => {

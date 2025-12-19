@@ -224,7 +224,7 @@ export default function RuleDetails({
       </Head>
 
       <Wrapper>
-        <EuiFlexGroup css={styles.container}>
+        <EuiFlexGroup gutterSize="l" css={styles.container}>
           <EuiFlexItem>
             <EuiPanel grow={true}>
               <EuiTitle size="m">
@@ -244,7 +244,7 @@ export default function RuleDetails({
             </EuiPanel>
           </EuiFlexItem>
         </EuiFlexGroup>
-        <EuiFlexGroup css={styles.container}>
+        <EuiFlexGroup gutterSize="l" css={styles.container}>
           <EuiFlexItem>
             <EuiPanel>
               <EuiTitle size="m">

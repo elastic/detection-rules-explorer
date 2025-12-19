@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, ReactNode } from 'react';
 import {
   EuiPanel,
   EuiHealth,
@@ -16,6 +16,7 @@ interface RuleFilterProps {
   displayName: string;
   icon: string;
   onTagChange: (type: string, selected: string[]) => void;
+  children?: ReactNode;
 }
 
 const RuleFilter: FunctionComponent<RuleFilterProps> = ({

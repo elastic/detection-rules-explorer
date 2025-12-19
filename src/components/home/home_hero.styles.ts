@@ -52,5 +52,6 @@ export const homeHeroStyles = euiTheme => ({
   `,
   grid: css`
     justify-content: center;
+    justify-items: center;
   `,
 });

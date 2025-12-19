@@ -12,10 +12,10 @@ export const ruleDetailsStyles = euiTheme => ({
   `,
   list: css`
     > dt {
-      width: 40%;
+      width: 65%;
     }
     > dd {
-      width: 60%;
+      width: 35%;
     }
   `,
   callout: css`

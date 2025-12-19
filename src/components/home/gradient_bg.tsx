@@ -1,9 +1,14 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import { useEuiTheme, transparentize } from '@elastic/eui';
 import { useTheme } from '../theme';
 import { gradientBgStyles } from './gradient_bg.styles';
 
-const GradientBg: FunctionComponent = ({ children }) => {
+// Explicit interface for props required by Typescript 5+
+interface GradientBgProps {
+  children: ReactNode;
+}
+
+const GradientBg: FunctionComponent<GradientBgProps> = ({ children }) => {
   const { euiTheme } = useEuiTheme();
   const { colorMode } = useTheme();
 

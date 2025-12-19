@@ -1,10 +1,14 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import Header from './header';
 import GradientBg from './gradient_bg';
 import { useEuiTheme } from '@elastic/eui';
 import { wrapperStyles } from './wrapper.styles';
 
-const Wrapper: FunctionComponent = ({ children }) => {
+interface WrapperProps {
+  children: ReactNode;
+}
+
+const Wrapper: FunctionComponent<WrapperProps> = ({ children }) => {
   const { euiTheme } = useEuiTheme();
   const styles = wrapperStyles(euiTheme);
 
