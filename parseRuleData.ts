@@ -198,7 +198,7 @@ async function getPrebuiltDetectionRules(
   const res = await axios.get(githubRulesTarballUrl, {
     responseType: 'stream',
   });
-  const parser = res.data.pipe(new tar.Parse());
+  const parser = res.data.pipe(new tar.Parser());
   parser.on('entry', entry => {
     if (
       (entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) ||

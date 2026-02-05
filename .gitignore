@@ -29,4 +29,5 @@ tsconfig.tsbuildinfo
 #calculated rule data
 src/data/**
 parseRuleData.js
+.prebuild
 ~
