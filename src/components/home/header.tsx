@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   EuiHeader,
@@ -8,10 +7,8 @@ import {
   EuiToolTip,
   EuiIcon,
 } from '@elastic/eui';
-import { imageLoader } from '../../lib/loader';
 import ThemeSwitcher from './theme_switcher';
 import { headerStyles } from './header.styles';
-import Logo from '../../../public/images/logo-eui.svg';
 
 const Header = () => {
   const { euiTheme } = useEuiTheme();

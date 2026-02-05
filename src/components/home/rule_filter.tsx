@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, ReactNode } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import {
   EuiPanel,
   EuiHealth,
@@ -20,7 +20,6 @@ interface RuleFilterProps {
 }
 
 const RuleFilter: FunctionComponent<RuleFilterProps> = ({
-  children,
   tagList,
   tagFilter,
   displayName,

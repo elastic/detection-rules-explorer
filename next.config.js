@@ -93,7 +93,10 @@ const nextConfig = {
     }
 
     // Copy theme CSS files into `public` only if they exist
-    if (Array.isArray(themeConfig.copyConfig) && themeConfig.copyConfig.length > 0) {
+    if (
+      Array.isArray(themeConfig.copyConfig) &&
+      themeConfig.copyConfig.length > 0
+    ) {
       config.plugins.push(
         new CopyWebpackPlugin({ patterns: themeConfig.copyConfig })
       );
@@ -227,7 +230,13 @@ function derivePathPrefix() {
       const originUrl = gitConfig['remote "origin"'].url;
 
       // eslint-disable-next-line prettier/prettier
-      return '/' + originUrl.split('/').pop().replace(/\.git$/, '');
+      return (
+        '/' +
+        originUrl
+          .split('/')
+          .pop()
+          .replace(/\.git$/, '')
+      );
     }
   }
 

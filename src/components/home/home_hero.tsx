@@ -9,9 +9,7 @@ import {
   EuiPanel,
   EuiFlexGrid,
   EuiFieldSearch,
-  EuiAccordion,
   EuiFormRow,
-  useGeneratedHtmlId,
 } from '@elastic/eui';
 import { homeHeroStyles } from './home_hero.styles';
 import { useEuiTheme } from '@elastic/eui';
@@ -31,10 +29,8 @@ interface RuleFilterProps {
 }
 
 const HomeHero: FunctionComponent<RuleFilterProps> = ({
-  children,
   rules,
   tagSummaries,
-  searchFilter,
   tagFilter,
   onSearchChange,
   onTagChange,

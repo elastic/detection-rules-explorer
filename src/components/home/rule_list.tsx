@@ -14,7 +14,7 @@ interface RuleListProps {
 
 const MAX_RULES = 100;
 
-const RuleList: FunctionComponent<RuleListProps> = ({ children, rules }) => {
+const RuleList: FunctionComponent<RuleListProps> = ({ rules }) => {
   const { euiTheme } = useEuiTheme();
   const styles = ruleListStyles(euiTheme);
 

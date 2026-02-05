@@ -21,7 +21,7 @@ interface RulePanelProps {
   children?: ReactNode;
 }
 
-const RulePanel: FunctionComponent<RulePanelProps> = ({ children, rule }) => {
+const RulePanel: FunctionComponent<RulePanelProps> = ({ rule }) => {
   const styles = rulePanelStyles();
 
   return (
