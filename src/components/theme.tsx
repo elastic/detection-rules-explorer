@@ -15,7 +15,7 @@ import { getTheme, enableTheme } from '../lib/theme';
  */
 export const GlobalProvider = createContext<{
   colorMode?: string;
-  setColorMode?: (colorMode: string) => void;
+  setColorMode?: (_value: string) => void;
 }>({});
 
 interface ThemeProps {

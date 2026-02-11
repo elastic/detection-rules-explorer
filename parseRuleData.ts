@@ -47,29 +47,29 @@ async function getPrebuiltDetectionRules(
     reference: string;
     subtechnique?: { id: string; reference: string }[];
   };
-  
+
   type Tactic = {
     id: string;
     name: string;
     reference: string;
   };
-  
+
   type Threat = {
     framework: string;
     technique?: Technique[];
     tactic?: Tactic;
   };
-    
+
   const convertHuntMitre = function (mitreData: string[]): Threat[] {
     const threat: Threat[] = [];
-  
-    mitreData.forEach((item) => {
+
+    mitreData.forEach(item => {
       if (item.startsWith('TA')) {
         threat.push({
-          framework: "MITRE ATT&CK",
+          framework: 'MITRE ATT&CK',
           tactic: {
             id: item,
-            name: "",
+            name: '',
             reference: `https://attack.mitre.org/tactics/${item}/`,
           },
           technique: [], // Ensure technique is an empty array if not present
@@ -78,13 +78,13 @@ async function getPrebuiltDetectionRules(
         const parts = item.split('.');
         const techniqueId = parts[0];
         const subtechniqueId = parts[1];
-    
+
         const technique: Technique = {
           id: techniqueId,
-          name: "",
+          name: '',
           reference: `https://attack.mitre.org/techniques/${techniqueId}/`,
         };
-    
+
         if (subtechniqueId) {
           technique.subtechnique = [
             {
@@ -93,51 +93,51 @@ async function getPrebuiltDetectionRules(
             },
           ];
         }
-    
+
         // Find the last added threat with a tactic to add the technique to it
         const lastThreat = threat[threat.length - 1];
         if (lastThreat && lastThreat.tactic && lastThreat.technique) {
           lastThreat.technique.push(technique);
         } else {
           threat.push({
-            framework: "MITRE ATT&CK",
+            framework: 'MITRE ATT&CK',
             tactic: {
-              id: "",
-              name: "",
-              reference: "",
+              id: '',
+              name: '',
+              reference: '',
             },
             technique: [technique],
           });
         }
       }
     });
-  
+
     return threat;
   };
 
   const addRule = function (buffer) {
     const ruleContent = toml.parse(buffer);
-  
+
     // Check if ruleContent.rule and ruleContent.hunt exist
     const ruleId = ruleContent.rule?.rule_id || ruleContent.hunt?.uuid;
     if (!ruleId) {
       throw new Error('Neither rule_id nor hunt.uuid is available');
     }
-  
+
     // Initialize ruleContent.rule and ruleContent.metadata if they are undefined
     ruleContent.rule = ruleContent.rule || {};
     ruleContent.metadata = ruleContent.metadata || {};
-  
+
     // Helper function to set default values if they do not exist
     const setDefault = (obj, key, defaultValue) => {
       if (!obj[key]) {
         obj[key] = defaultValue;
       }
     };
-  
+
     // Use default tags if ruleContent.rule.tags does not exist
-    const tags = ruleContent.rule.tags || ["Hunt Type: Hunt"];
-    setDefault(ruleContent.rule, 'tags', ["Hunt Type: Hunt"]);
+    const tags = ruleContent.rule.tags || ['Hunt Type: Hunt'];
+    setDefault(ruleContent.rule, 'tags', ['Hunt Type: Hunt']);
 
     // Add a tag based on the language
     const language = ruleContent.rule?.language;
@@ -149,40 +149,47 @@ async function getPrebuiltDetectionRules(
     const defaultDate = new Date(0).toISOString();
     setDefault(ruleContent.metadata, 'creation_date', defaultDate);
     setDefault(ruleContent.metadata, 'updated_date', defaultDate);
-  
+
     // Use current date as default updated_date if it does not exist
-    const updatedDate = new Date(ruleContent.metadata.updated_date.replace(/\//g, '-'));
-  
+    const updatedDate = new Date(
+      ruleContent.metadata.updated_date.replace(/\//g, '-')
+    );
+
     // Use hunt.name if rule.name does not exist
-    const ruleName = ruleContent.rule.name || ruleContent.hunt.name || 'Unknown Rule';
-  
+    const ruleName =
+      ruleContent.rule.name || ruleContent.hunt.name || 'Unknown Rule';
+
     // Set other default values if they do not exist
-    setDefault(ruleContent.metadata, 'integration', ruleContent.hunt?.integration);
+    setDefault(
+      ruleContent.metadata,
+      'integration',
+      ruleContent.hunt?.integration
+    );
     setDefault(ruleContent.rule, 'query', ruleContent.hunt?.query);
-    setDefault(ruleContent.rule, 'license', "Elastic License v2");
+    setDefault(ruleContent.rule, 'license', 'Elastic License v2');
     setDefault(ruleContent.rule, 'description', ruleContent.hunt?.description);
 
     // Convert hunt.mitre to rule.threat if hunt.mitre exists
     if (ruleContent.hunt?.mitre) {
       ruleContent.rule.threat = convertHuntMitre(ruleContent.hunt.mitre);
     }
-  
+
     ruleSummaries.push({
       id: ruleId,
       name: ruleName,
       tags: tags,
       updated_date: updatedDate,
     });
-  
+
     for (const t of tags) {
       addTagSummary(t, tagSummaries);
     }
-  
+
     fs.writeFileSync(
       `${RULES_OUTPUT_PATH}${ruleId}.json`,
       JSON.stringify(ruleContent)
     );
-  
+
     count++;
   };
 
@@ -191,11 +198,11 @@ async function getPrebuiltDetectionRules(
   const res = await axios.get(githubRulesTarballUrl, {
     responseType: 'stream',
   });
-  const parser = res.data.pipe(new tar.Parse());
+  const parser = res.data.pipe(new tar.Parser());
   parser.on('entry', entry => {
     if (
       (entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) ||
-      entry.path.match(/^elastic-detection-rules-.*\/hunting\/.*\.toml$/) ||
+        entry.path.match(/^elastic-detection-rules-.*\/hunting\/.*\.toml$/) ||
         entry.path.match(
           /^elastic-detection-rules-.*\/rules_building_block\/.*\.toml$/
         )) &&

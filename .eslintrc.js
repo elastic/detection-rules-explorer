@@ -1,11 +1,11 @@
 module.exports = {
+  ignorePatterns: ['parseRuleData.js', 'parseRuleData.ts'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'next/core-web-vitals',
   ],
-  plugins: ['prettier'
-  ],
+  plugins: ['prettier'],
   rules: {
     // In an ideal world, we'd never have to use @ts-ignore, but that's not
     // possible right now.
@@ -17,6 +17,11 @@ module.exports = {
     // Another theoretically good rule, but sometimes we know better than
     // the linter.
     '@typescript-eslint/no-non-null-assertion': 'off',
+    // Allow unused args that start with _ (e.g. in type definitions)
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
     // Accessibility is important to EUI. Enforce all a11y rules.
     'jsx-a11y/accessible-emoji': 'error',
     'jsx-a11y/alt-text': 'error',
@@ -47,7 +52,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
 
-    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    'react/no-unknown-property': ['error', { ignore: ['css'] }],
 
     'prefer-object-spread': 'error',
     // Use template strings instead of string concatenation
