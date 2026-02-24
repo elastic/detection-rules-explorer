@@ -55,11 +55,13 @@ const RulePanel: FunctionComponent<RulePanelProps> = ({ rule }) => {
                 );
               })}
             <EuiSpacer size="xs" />
-            <EuiText size="xs">
-              <p>
-                <em>Updated {moment(rule.updated_date).fromNow()}</em>
-              </p>
-            </EuiText>
+            {!rule.tags.some(t => t === 'Hunt Type: Hunt') && (
+              <EuiText size="xs">
+                <p>
+                  <em>Updated {moment(rule.updated_date).fromNow()}</em>
+                </p>
+              </EuiText>
+            )}
           </>
         </LazyLoad>
       </EuiPanel>

@@ -57,10 +57,13 @@ export default function RuleDetails({
   const { euiTheme } = useEuiTheme();
   const styles = ruleDetailsStyles(euiTheme);
 
+  const isThreatHunt = !!rule.hunt;
   const ruleCreated =
+    !isThreatHunt &&
     rule.metadata.creation_date &&
     moment(rule.metadata.creation_date.replace(/\//g, '-'));
   const ruleUpdated =
+    !isThreatHunt &&
     rule.metadata.updated_date &&
     moment(rule.metadata.updated_date.replace(/\//g, '-'));
 
@@ -231,10 +234,12 @@ export default function RuleDetails({
                 <h1>{rule.rule.name}</h1>
               </EuiTitle>
               <EuiSpacer size="s" />
-              <EuiText color="subdued" size="s">
-                Last updated {ruleUpdated.fromNow()} on{' '}
-                {ruleUpdated.format('YYYY-MM-DD')}
-              </EuiText>
+              {ruleUpdated && (
+                <EuiText color="subdued" size="s">
+                  Last updated {ruleUpdated.fromNow()} on{' '}
+                  {ruleUpdated.format('YYYY-MM-DD')}
+                </EuiText>
+              )}
               {ruleCreated && (
                 <EuiText color="subdued" size="s">
                   Created {ruleCreated.fromNow()} on{' '}
