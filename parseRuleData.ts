@@ -1,5 +1,6 @@
 import * as tar from 'tar';
 import { PassThrough } from 'stream';
+import * as path from 'path';
 
 import * as toml from 'toml';
 import * as fs from 'fs';
@@ -10,6 +11,8 @@ interface RuleSummary {
   name: string;
   tags: Array<string>;
   updated_date: Date;
+  description?: string;
+  references?: string[];
 }
 
 interface TagSummary {
@@ -35,6 +38,22 @@ function addTagSummary(t: string, tagSummaries: Map<string, TagSummary>) {
 }
 
 const RULES_OUTPUT_PATH = './src/data/rules/';
+const LOCAL_RULES_PATH = process.env.DETECTION_RULES_PATH;
+
+function walkDir(dir: string, fileList: string[] = []): string[] {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      if (!file.startsWith('_')) {
+        walkDir(filePath, fileList);
+      }
+    } else if (file.endsWith('.toml')) {
+      fileList.push(filePath);
+    }
+  }
+  return fileList;
+}
 
 async function getPrebuiltDetectionRules(
   ruleSummaries: RuleSummary[],
@@ -179,6 +198,8 @@ async function getPrebuiltDetectionRules(
       name: ruleName,
       tags: tags,
       updated_date: updatedDate,
+      description: ruleContent.rule.description || ruleContent.hunt?.description || '',
+      references: ruleContent.rule.references || [],
     });
 
     for (const t of tags) {
@@ -193,37 +214,52 @@ async function getPrebuiltDetectionRules(
     count++;
   };
 
-  const githubRulesTarballUrl =
-    'https://api.github.com/repos/elastic/detection-rules/tarball';
-  const res = await axios.get(githubRulesTarballUrl, {
-    responseType: 'stream',
-  });
-  const parser = res.data.pipe(new tar.Parser());
-  parser.on('entry', entry => {
-    if (
-      (entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) ||
-        entry.path.match(/^elastic-detection-rules-.*\/hunting\/.*\.toml$/) ||
-        entry.path.match(
-          /^elastic-detection-rules-.*\/rules_building_block\/.*\.toml$/
-        )) &&
-      !entry.path.match(/\/_deprecated\//)
-    ) {
-      const contentStream = new PassThrough();
-      entry.pipe(contentStream);
-      let buf = Buffer.alloc(0);
-      contentStream.on('data', function (d) {
-        buf = Buffer.concat([buf, d]);
-      });
-      contentStream.on('end', () => {
-        addRule(buf);
-      });
-    } else {
-      entry.resume();
+  if (LOCAL_RULES_PATH) {
+    console.log(`Using local detection-rules path: ${LOCAL_RULES_PATH}`);
+    const dirs = ['rules', 'hunting', 'rules_building_block'];
+    for (const dir of dirs) {
+      const dirPath = path.join(LOCAL_RULES_PATH, dir);
+      if (!fs.existsSync(dirPath)) continue;
+      const files = walkDir(dirPath);
+      for (const file of files) {
+        if (file.includes('_deprecated')) continue;
+        const buffer = fs.readFileSync(file);
+        addRule(buffer);
+      }
     }
-  });
-  await new Promise(resolve => parser.on('finish', resolve));
-
-  console.log(`loaded ${count} rules from prebuilt repository`);
+    console.log(`loaded ${count} rules from local path: ${LOCAL_RULES_PATH}`);
+  } else {
+    const githubRulesTarballUrl =
+      'https://api.github.com/repos/elastic/detection-rules/tarball';
+    const res = await axios.get(githubRulesTarballUrl, {
+      responseType: 'stream',
+    });
+    const parser = res.data.pipe(new tar.Parser());
+    parser.on('entry', entry => {
+      if (
+        (entry.path.match(/^elastic-detection-rules-.*\/rules\/.*\.toml$/) ||
+          entry.path.match(/^elastic-detection-rules-.*\/hunting\/.*\.toml$/) ||
+          entry.path.match(
+            /^elastic-detection-rules-.*\/rules_building_block\/.*\.toml$/
+          )) &&
+        !entry.path.match(/\/_deprecated\//)
+      ) {
+        const contentStream = new PassThrough();
+        entry.pipe(contentStream);
+        let buf = Buffer.alloc(0);
+        contentStream.on('data', function (d) {
+          buf = Buffer.concat([buf, d]);
+        });
+        contentStream.on('end', () => {
+          addRule(buf);
+        });
+      } else {
+        entry.resume();
+      }
+    });
+    await new Promise(resolve => parser.on('finish', resolve));
+    console.log(`loaded ${count} rules from prebuilt repository`);
+  }
 }
 
 const integrationsTagMap = new Map<string, string>([
@@ -263,7 +299,7 @@ async function getPackageRules(
           return x;
         }
       });
-    tags.push('Use Case: Threat Detection');
+    // Use Case tag removed from taxonomy
 
     // for now, map the tags to look more like the prebuild rules package
     ruleSummaries.push({
@@ -271,6 +307,8 @@ async function getPackageRules(
       name: ruleContent.data.attributes.name,
       tags: tags,
       updated_date: updatedDate,
+      description: ruleContent.data.attributes.description || '',
+      references: ruleContent.data.attributes.references || [],
     });
     for (const t of tags) {
       addTagSummary(t, tagSummaries);

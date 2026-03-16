@@ -3,7 +3,7 @@ export const ruleFilterTypeMap = {
     color: 'accent',
     icon: 'globe',
   },
-  'Use Case': {
+  Platform: {
     color: 'primary',
     icon: 'launch',
   },
@@ -11,9 +11,9 @@ export const ruleFilterTypeMap = {
     color: 'default',
     icon: 'database',
   },
-  'Hunt Type': {
+  Service: {
     color: 'default',
-    icon: 'eye',
+    icon: 'package',
   },
   OS: {
     color: 'success',
@@ -26,6 +26,34 @@ export const ruleFilterTypeMap = {
   'Rule Type': {
     color: 'hollow',
     icon: 'layers',
+  },
+  Vuln: {
+    color: 'danger',
+    icon: 'alert',
+  },
+  Threat: {
+    color: 'danger',
+    icon: 'securitySignal',
+  },
+  'Mitre Atlas': {
+    color: 'warning',
+    icon: 'bug',
+  },
+  Profile: {
+    color: 'success',
+    icon: 'visGauge',
+  },
+  Resources: {
+    color: 'default',
+    icon: 'documentation',
+  },
+  Promotion: {
+    color: 'default',
+    icon: 'push',
+  },
+  'Hunt Type': {
+    color: 'default',
+    icon: 'eye',
   },
   Language: {
     color: 'default',

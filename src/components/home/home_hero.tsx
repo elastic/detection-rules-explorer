@@ -89,7 +89,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
         <EuiFormRow fullWidth css={styles.search}>
           <EuiPanel>
             <EuiFieldSearch
-              placeholder={`Search ${rules.length} rules by name`}
+              placeholder={`Search ${rules.length} rules by name, description, or reference`}
               value={displaySearchTerm}
               onChange={e => onSearchBoxChange(e)}
               fullWidth
@@ -108,35 +108,9 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           />
 
           <RuleFilter
-            displayName="Rule Types"
-            icon="layers"
-            tagList={tagSummaries.filter(
-              x => x.tag_type == 'Rule Type' && x.tag_name != 'ML'
-            )}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Operating Systems"
-            icon="compute"
-            tagList={tagSummaries.filter(x => x.tag_type == 'OS')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Use Cases"
+            displayName="Platforms"
             icon="launch"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Use Case')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Tactics"
-            icon="bug"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Tactic')}
+            tagList={tagSummaries.filter(x => x.tag_type == 'Platform')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
           />
@@ -150,16 +124,75 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           />
 
           <RuleFilter
-            displayName="Threat Hunt Queries"
-            icon="eye"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Hunt Type')}
+            displayName="Services"
+            icon="package"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Service')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
           />
+
           <RuleFilter
-            displayName="Rule Languages"
-            icon="menu"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Language')}
+            displayName="Operating Systems"
+            icon="compute"
+            tagList={tagSummaries.filter(x => x.tag_type == 'OS')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Tactics"
+            icon="bug"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Tactic')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Rule Types"
+            icon="layers"
+            tagList={tagSummaries.filter(
+              x => x.tag_type == 'Rule Type' && x.tag_name != 'ML'
+            )}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Threats"
+            icon="securitySignal"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Threat')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Vulnerabilities"
+            icon="alert"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Vuln')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Profile"
+            icon="visGauge"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Profile')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Resources"
+            icon="documentation"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Resources')}
+            tagFilter={tagFilter}
+            onTagChange={onTagChange}
+          />
+
+          <RuleFilter
+            displayName="Threat Hunt Queries"
+            icon="eye"
+            tagList={tagSummaries.filter(x => x.tag_type == 'Hunt Type')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
           />

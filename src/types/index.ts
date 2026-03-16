@@ -10,4 +10,6 @@ export interface RuleSummary {
   name: string;
   tags: Array<string>;
   updated_date: string;
+  description?: string;
+  references?: Array<string>;
 }

@@ -15,11 +15,14 @@ const Index: FunctionComponent = () => {
 
   const rules = useMemo(() => {
     const newRules = newestRules.filter(function (r) {
-      if (
-        searchFilter &&
-        !r.name.toLowerCase().includes(searchFilter.toLowerCase())
-      ) {
-        return false;
+      if (searchFilter) {
+        const term = searchFilter.toLowerCase();
+        const nameMatch = r.name.toLowerCase().includes(term);
+        const descMatch = r.description?.toLowerCase().includes(term) || false;
+        const refMatch = r.references?.some(ref => ref.toLowerCase().includes(term)) || false;
+        if (!nameMatch && !descMatch && !refMatch) {
+          return false;
+        }
       }
       if (tagFilter.length > 0 && !tagFilter.every(t => r.tags.includes(t))) {
         return false;
@@ -50,7 +53,7 @@ const Index: FunctionComponent = () => {
         tagSummariesMap.set(t, s);
       }
     }
-    return Array.from(tagSummariesMap.values());
+    return Array.from(tagSummariesMap.values()).filter(t => t.count > 0);
   }, [rules]);
 
   const updateTagFilter = function (type: string, selected: string[]) {
