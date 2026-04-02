@@ -10,13 +10,29 @@ import { ruleFilterStyles } from './rule_filter.styles';
 import { TagSummary } from '../../types';
 import { ruleFilterTypeMap } from '../../lib/ruledata';
 
+type SortOrder = 'alpha' | 'count' | 'year-desc';
+
 interface RuleFilterProps {
   tagList: TagSummary[];
   tagFilter: string[];
   displayName: string;
   icon: string;
+  sortOrder?: SortOrder;
   onTagChange: (type: string, selected: string[]) => void;
   children?: ReactNode;
+}
+
+function sortTags(tags: TagSummary[], order: SortOrder): TagSummary[] {
+  const sorted = [...tags];
+  switch (order) {
+    case 'alpha':
+      return sorted.sort((a, b) => a.tag_name.localeCompare(b.tag_name));
+    case 'year-desc':
+      return sorted.sort((a, b) => b.tag_name.localeCompare(a.tag_name));
+    case 'count':
+    default:
+      return sorted;
+  }
 }
 
 const RuleFilter: FunctionComponent<RuleFilterProps> = ({
@@ -24,11 +40,14 @@ const RuleFilter: FunctionComponent<RuleFilterProps> = ({
   tagFilter,
   displayName,
   icon,
+  sortOrder = 'count',
   onTagChange,
 }) => {
   const styles = ruleFilterStyles();
 
-  const options = tagList.map(t => {
+  const sortedTagList = sortTags(tagList, sortOrder);
+
+  const options = sortedTagList.map(t => {
     return {
       value: t,
       label: `${t.tag_name} (${t.count})`,

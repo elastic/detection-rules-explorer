@@ -110,6 +110,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           <RuleFilter
             displayName="Platforms"
             icon="launch"
+            sortOrder="alpha"
             tagList={tagSummaries.filter(x => x.tag_type == 'Platform')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
@@ -118,6 +119,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           <RuleFilter
             displayName="Data Sources"
             icon="database"
+            sortOrder="alpha"
             tagList={tagSummaries.filter(x => x.tag_type == 'Data Source')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
@@ -126,6 +128,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           <RuleFilter
             displayName="Services"
             icon="package"
+            sortOrder="alpha"
             tagList={tagSummaries.filter(x => x.tag_type == 'Service')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
@@ -160,6 +163,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           <RuleFilter
             displayName="Threats"
             icon="securitySignal"
+            sortOrder="alpha"
             tagList={tagSummaries.filter(x => x.tag_type == 'Threat')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
@@ -168,6 +172,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           <RuleFilter
             displayName="Vulnerabilities"
             icon="alert"
+            sortOrder="year-desc"
             tagList={tagSummaries.filter(x => x.tag_type == 'Vuln')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
