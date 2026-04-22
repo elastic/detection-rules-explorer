@@ -8,12 +8,20 @@ import newestRules from '../data/newestRules.json';
 import tagSummaries from '../data/tagSummaries.json';
 
 import { TagSummary } from '../types';
+import { dateRangeOptions } from '../components/home/date_filter';
 
 const Index: FunctionComponent = () => {
   const [searchFilter, setSearchFilter] = useState('');
   const [tagFilter, setTagFilter] = useState([]);
+  const [dateFilter, setDateFilter] = useState<string | null>(null);
 
   const rules = useMemo(() => {
+    const dateRange = dateRangeOptions.find(o => o.value === dateFilter);
+    const cutoff =
+      dateRange && dateRange.days
+        ? Date.now() - dateRange.days * 24 * 60 * 60 * 1000
+        : null;
+
     const newRules = newestRules.filter(function (r) {
       if (
         searchFilter &&
@@ -24,10 +32,16 @@ const Index: FunctionComponent = () => {
       if (tagFilter.length > 0 && !tagFilter.every(t => r.tags.includes(t))) {
         return false;
       }
+      if (cutoff !== null) {
+        const updated = Date.parse(r.updated_date);
+        if (isNaN(updated) || updated < cutoff) {
+          return false;
+        }
+      }
       return true;
     });
     return newRules;
-  }, [searchFilter, tagFilter]);
+  }, [searchFilter, tagFilter, dateFilter]);
 
   const filteredTagSummaries = useMemo(() => {
     const tagSummariesMap = new Map<string, TagSummary>();
@@ -69,8 +83,10 @@ const Index: FunctionComponent = () => {
           tagSummaries={filteredTagSummaries}
           searchFilter={searchFilter}
           tagFilter={tagFilter}
+          dateFilter={dateFilter}
           onSearchChange={setSearchFilter}
           onTagChange={updateTagFilter}
+          onDateChange={setDateFilter}
         />
         <RuleList rules={rules} />
       </Wrapper>

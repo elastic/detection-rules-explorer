@@ -15,6 +15,7 @@ import { homeHeroStyles } from './home_hero.styles';
 import { useEuiTheme } from '@elastic/eui';
 
 import RuleFilter from './rule_filter';
+import DateFilter from './date_filter';
 
 import { RuleSummary, TagSummary } from '../../types';
 
@@ -23,8 +24,10 @@ interface RuleFilterProps {
   tagSummaries: TagSummary[];
   searchFilter: string;
   tagFilter: string[];
+  dateFilter: string | null;
   onSearchChange: (e: string) => void;
   onTagChange: (type: string, selected: string[]) => void;
+  onDateChange: (value: string | null) => void;
   children?: ReactNode;
 }
 
@@ -32,8 +35,10 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
   rules,
   tagSummaries,
   tagFilter,
+  dateFilter,
   onSearchChange,
   onTagChange,
+  onDateChange,
 }) => {
   const { euiTheme } = useEuiTheme();
   const styles = homeHeroStyles(euiTheme);
@@ -162,6 +167,11 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
             tagList={tagSummaries.filter(x => x.tag_type == 'Language')}
             tagFilter={tagFilter}
             onTagChange={onTagChange}
+          />
+
+          <DateFilter
+            selectedValue={dateFilter}
+            onChange={onDateChange}
           />
         </EuiFlexGrid>
       </EuiFlexItem>
