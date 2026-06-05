@@ -46,11 +46,11 @@
     "typescript-plugin-css-modules": "^5.2.0"
   },
   "overrides": {
-    "trim": "0.0.3",
+    "trim": "1.0.1",
     "prismjs": "^1.30.0",
     "postcss": ">=8.4.31"
   },
   "resolutions": {
-    "trim": "0.0.3"
+    "trim": "1.0.1"
   }
 }
