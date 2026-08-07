@@ -28,11 +28,11 @@
     "@next/bundle-analyzer": "^12.3.7",
     "@types/node": "^16.18.126",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "axios": "^1.14.0",
+    "axios": "^1.18.0",
     "copy-webpack-plugin": "^13.0.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "^12.3.7",
-    "eslint-config-prettier": "^8.10.2",
+    "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^4.2.5",
     "glob": "^7.2.0",
     "iniparser": "^1.0.5",
@@ -46,11 +46,11 @@
     "typescript-plugin-css-modules": "^5.2.0"
   },
   "overrides": {
-    "trim": "0.0.3",
+    "trim": "1.0.1",
     "prismjs": "^1.30.0",
     "postcss": ">=8.4.31"
   },
   "resolutions": {
-    "trim": "0.0.3"
+    "trim": "1.0.1"
   }
 }
