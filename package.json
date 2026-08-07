@@ -33,7 +33,7 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "^12.3.7",
     "eslint-config-prettier": "^10.0.0",
-    "eslint-plugin-prettier": "^4.2.5",
+    "eslint-plugin-prettier": "^5.0.0",
     "glob": "^7.2.0",
     "iniparser": "^1.0.5",
     "moment": "^2.30.1",
