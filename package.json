@@ -27,7 +27,7 @@
     "@emotion/babel-plugin": "^11.13.5",
     "@next/bundle-analyzer": "^12.3.7",
     "@types/node": "^16.18.126",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
     "axios": "^1.18.0",
     "copy-webpack-plugin": "^13.0.1",
     "eslint": "^8.57.1",
