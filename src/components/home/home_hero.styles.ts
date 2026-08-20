@@ -20,30 +20,9 @@ export const homeHeroStyles = euiTheme => ({
       padding-top: ${euiTheme.size.base};
     }
   `,
-  subtitle: css`
-    margin-top: ${euiTheme.size.l};
-    padding-bottom: ${euiTheme.size.m};
-  `,
   description: css`
     @media (max-width: ${euiTheme.breakpoint.m}px) {
       align-self: center;
-    }
-  `,
-  aligned: css`
-    vertical-align: middle;
-    margin-right: 3px;
-    font-weight: bold;
-  `,
-  accordian: css`
-    margin: auto;
-
-    .euiAccordion__triggerWrapper {
-      display: inline-flex;
-    }
-
-    button {
-      flex-grow: 0;
-      inline-size: auto;
     }
   `,
   search: css`

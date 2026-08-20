@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const globalStyes = css`
+export const globalStyles = css`
   #__next,
   .guideBody {
     min-height: 100%;

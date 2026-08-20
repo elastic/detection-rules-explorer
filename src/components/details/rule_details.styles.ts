@@ -5,7 +5,6 @@ export const ruleDetailsStyles = euiTheme => ({
     max-width: 1200px;
     width: 100%;
     margin: auto !important;
-    }
   `,
   badge: css`
     margin: 4px;

@@ -74,48 +74,6 @@ const RuleFilter: FunctionComponent<RuleFilterProps> = ({
       />
     </EuiPanel>
   );
-  /*
-  return (
-    <>
-      <EuiText size="m">
-        <p>
-          <EuiIcon size="m" type={icon} css={styles.aligned} />
-          <span css={styles.aligned}>{displayName}</span>
-        </p>
-      </EuiText>
-      <EuiFlexGrid gutterSize="s" responsive={false} css={styles.grid}>
-        {tagList.map((t, i) => {
-          const isTagged = tagFilter.filter(x => x == t.tag_full).length > 0;
-          let badgeTheme = ruleFilterTypeMap[t.tag_type] || {
-            color: 'hollow',
-          };
-          if (!isTagged) {
-            badgeTheme = { color: 'hollow' };
-          }
-          if (t.count == 0) {
-            badgeTheme = { color: 'default' };
-          }
-          return (
-            <EuiFlexItem key={i}>
-              <EuiBadge
-                color={badgeTheme.color}
-                onClick={() => {
-                  console.log(`${t.tag_full} ${isTagged}`);
-                  if (isTagged) {
-                    onTagChange([], [t.tag_full]);
-                  } else {
-                    onTagChange([t.tag_full], []);
-                  }
-                }}
-                onClickAriaLabel={`Toggle tag for ${t.tag_full}`}>
-                {t.tag_name} ({t.count})
-              </EuiBadge>
-            </EuiFlexItem>
-          );
-        })}
-      </EuiFlexGrid>
-    </>
-  );*/
 };
 
 export default RuleFilter;

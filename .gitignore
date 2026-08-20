@@ -30,4 +30,9 @@ tsconfig.tsbuildinfo
 src/data/**
 parseRuleData.js
 .prebuild
-~
+
+# Local scratch drafts (PR / issue write-ups). Keep these out of the repo -- put
+# the content in the actual GitHub PR or issue instead.
+/tmp.md
+/PULL_REQUEST.md
+/*_PR.md
