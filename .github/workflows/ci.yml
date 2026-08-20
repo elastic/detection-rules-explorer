@@ -6,8 +6,8 @@
 #
 # Two jobs, split by whether they need the generated rule data in `src/data/`:
 #
-#   checks  — lint + prebuild-script typecheck. No rule data required, no network
-#             beyond `npm ci`, so it returns in well under a minute.
+#   checks  — lint, unit tests, and prebuild-script typecheck. No rule data
+#             required, no network beyond `npm ci`, so it returns quickly.
 #   build   — regenerates `src/data/` from the live detection-rules tarball and
 #             statically renders every rule page. Slow, but it is the only
 #             end-to-end signal we have.
@@ -54,6 +54,10 @@ jobs:
       - name: Typecheck prebuild script
         run: npm run typecheck:scripts
 
+      # Unit tests need no generated rule data, so they run in the fast job.
+      - name: Test
+        run: npm test
+
   build:
     name: Build and app typecheck
     runs-on: ubuntu-latest
@@ -88,8 +92,6 @@ jobs:
 
       - name: Static export
         run: npm run export
-
-      # TODO(PR 8a): add a `npm test` step here once the Vitest harness lands.
 
       # Lets a reviewer diff the rendered site between two runs without building
       # locally — see the parity-check recipe in CLEANUP_PLAN.md §2. Drop this

@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "export": "next export",
     "typecheck": "npm run typecheck:app && npm run typecheck:scripts",
     "typecheck:app": "tsc --noEmit",
@@ -28,7 +30,8 @@
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
     "@next/bundle-analyzer": "^12.3.7",
-    "@types/node": "^16.18.126",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^20.19.43",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "axios": "^1.18.0",
     "copy-webpack-plugin": "^13.0.1",
@@ -38,10 +41,12 @@
     "eslint-plugin-prettier": "^4.2.5",
     "glob": "^7.2.0",
     "iniparser": "^1.0.5",
+    "jsdom": "^29.1.1",
     "prettier": "^2.8.8",
     "tar": "^7.5.13",
     "toml": "^3.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "trim": "1.0.1",
