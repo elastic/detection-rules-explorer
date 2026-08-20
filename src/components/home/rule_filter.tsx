@@ -8,7 +8,7 @@ import {
 } from '@elastic/eui';
 import { ruleFilterStyles } from './rule_filter.styles';
 import { TagSummary } from '../../types';
-import { ruleFilterTypeMap } from '../../lib/ruledata';
+import { tagTypeTheme } from '../../lib/tags';
 
 interface RuleFilterProps {
   tagList: TagSummary[];
@@ -32,7 +32,7 @@ const RuleFilter: FunctionComponent<RuleFilterProps> = ({
     return {
       value: t,
       label: `${t.tag_name} (${t.count})`,
-      color: ruleFilterTypeMap[t.tag_type].color,
+      color: tagTypeTheme(t.tag_type).color,
     };
   });
 

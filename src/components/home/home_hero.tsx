@@ -17,6 +17,7 @@ import { useEuiTheme } from '@elastic/eui';
 import RuleFilter from './rule_filter';
 
 import { RuleSummary, TagSummary } from '../../types';
+import { TAG_TYPES, tagsForType } from '../../lib/tags';
 
 interface RuleFilterProps {
   rules: RuleSummary[];
@@ -99,70 +100,16 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
         <EuiSpacer size="m" />
 
         <EuiFlexGrid columns={3} css={styles.grid}>
-          <RuleFilter
-            displayName="Domains"
-            icon="globe"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Domain')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Rule Types"
-            icon="layers"
-            tagList={tagSummaries.filter(
-              x => x.tag_type == 'Rule Type' && x.tag_name != 'ML'
-            )}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Operating Systems"
-            icon="compute"
-            tagList={tagSummaries.filter(x => x.tag_type == 'OS')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Use Cases"
-            icon="launch"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Use Case')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Tactics"
-            icon="bug"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Tactic')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Data Sources"
-            icon="database"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Data Source')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-
-          <RuleFilter
-            displayName="Threat Hunt Queries"
-            icon="eye"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Hunt Type')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
-          <RuleFilter
-            displayName="Rule Languages"
-            icon="menu"
-            tagList={tagSummaries.filter(x => x.tag_type == 'Language')}
-            tagFilter={tagFilter}
-            onTagChange={onTagChange}
-          />
+          {TAG_TYPES.map(tagType => (
+            <RuleFilter
+              key={tagType.type}
+              displayName={tagType.displayName}
+              icon={tagType.icon}
+              tagList={tagsForType(tagSummaries, tagType)}
+              tagFilter={tagFilter}
+              onTagChange={onTagChange}
+            />
+          ))}
         </EuiFlexGrid>
       </EuiFlexItem>
     </EuiFlexGroup>

@@ -5,19 +5,9 @@ import * as toml from 'toml';
 import * as fs from 'fs';
 import axios from 'axios';
 
-interface RuleSummary {
-  id: string;
-  name: string;
-  tags: Array<string>;
-  updated_date: Date;
-}
-
-interface TagSummary {
-  tag_type: string;
-  tag_name: string;
-  tag_full: string;
-  count: number;
-}
+// Shared with the app so the two cannot drift. `RuleSummaryInput` carries a
+// `Date`; JSON.stringify turns it into the ISO string the app reads back.
+import { RuleSummaryInput, TagSummary } from './src/types';
 
 function addTagSummary(t: string, tagSummaries: Map<string, TagSummary>) {
   const parts = t.split(': ');
@@ -37,7 +27,7 @@ function addTagSummary(t: string, tagSummaries: Map<string, TagSummary>) {
 const RULES_OUTPUT_PATH = './src/data/rules/';
 
 async function getPrebuiltDetectionRules(
-  ruleSummaries: RuleSummary[],
+  ruleSummaries: RuleSummaryInput[],
   tagSummaries: Map<string, TagSummary>
 ) {
   let count = 0;
@@ -239,7 +229,7 @@ const integrationsTagMap = new Map<string, string>([
 async function getPackageRules(
   name: string,
   displayName: string,
-  ruleSummaries: RuleSummary[],
+  ruleSummaries: RuleSummaryInput[],
   tagSummaries: Map<string, TagSummary>
 ) {
   const githubRulesListUrl = `https://api.github.com/repos/elastic/integrations/contents/packages/${name}/kibana/security_rule`;
@@ -295,7 +285,7 @@ async function getPackageRules(
 }
 
 async function precomputeRuleSummaries() {
-  const ruleSummaries: RuleSummary[] = [];
+  const ruleSummaries: RuleSummaryInput[] = [];
 
   const tagSummaries = new Map<string, TagSummary>();
 

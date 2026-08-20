@@ -1,6 +1,5 @@
 import { FunctionComponent, ReactNode } from 'react';
 import {
-  EuiBadge,
   EuiFlexItem,
   EuiPanel,
   EuiText,
@@ -14,7 +13,7 @@ import { rulePanelStyles } from './rule_panel.styles';
 import moment from 'moment';
 
 import { RuleSummary } from '../../types';
-import { ruleFilterTypeMap } from '../../lib/ruledata';
+import RuleTagBadges from '../rule_tag_badges';
 
 interface RulePanelProps {
   rule: RuleSummary;
@@ -37,23 +36,7 @@ const RulePanel: FunctionComponent<RulePanelProps> = ({ rule }) => {
         <LazyLoad>
           <>
             <EuiSpacer size="xs" />
-            {rule.tags
-              .filter(t => !t.startsWith('Resources'))
-              .map((t, i) => {
-                const badgeTheme = ruleFilterTypeMap[t.split(': ')[0]] || {
-                  color: 'hollow',
-                  icon: '',
-                };
-                return (
-                  <EuiBadge
-                    iconType={badgeTheme.icon}
-                    color={badgeTheme.color}
-                    css={styles.badge}
-                    key={i}>
-                    {t}
-                  </EuiBadge>
-                );
-              })}
+            <RuleTagBadges tags={rule.tags} badgeCss={styles.badge} />
             <EuiSpacer size="xs" />
             {!rule.tags.some(t => t === 'Hunt Type: Hunt') && (
               <EuiText size="xs">

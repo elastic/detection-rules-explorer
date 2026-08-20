@@ -20,7 +20,7 @@ import * as path from 'path';
 
 import Wrapper from '../../components/home/wrapper';
 import { ruleDetailsStyles } from '../../components/details/rule_details.styles';
-import { ruleFilterTypeMap } from '../../lib/ruledata';
+import RuleTagBadges from '../../components/rule_tag_badges';
 
 const RULES_OUTPUT_PATH = '../../../../src/data/rules/';
 
@@ -70,24 +70,9 @@ export default function RuleDetails({
   const aboutItems = [
     {
       title: 'Tags',
-      description: rule.rule.tags.map((t, i) => {
-        if (t.startsWith('Resources')) {
-          return <></>;
-        }
-        const badgeTheme = ruleFilterTypeMap[t.split(': ')[0]] || {
-          color: 'hollow',
-          icon: '',
-        };
-        return (
-          <EuiBadge
-            iconType={badgeTheme.icon}
-            color={badgeTheme.color}
-            css={styles.badge}
-            key={i}>
-            {t}
-          </EuiBadge>
-        );
-      }),
+      description: (
+        <RuleTagBadges tags={rule.rule.tags} badgeCss={styles.badge} />
+      ),
     },
     {
       title: 'Severity',
