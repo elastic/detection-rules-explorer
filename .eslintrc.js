@@ -1,5 +1,4 @@
 module.exports = {
-  ignorePatterns: ['parseRuleData.js', 'parseRuleData.ts'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'prettier',

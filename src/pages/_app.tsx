@@ -9,7 +9,7 @@ import { EuiErrorBoundary } from '@elastic/eui';
 import { Global } from '@emotion/react';
 import Chrome from '../components/chrome';
 import { Theme } from '../components/theme';
-import { globalStyes } from '../styles/global.styles';
+import { globalStyles } from '../styles/global.styles';
 import Script from 'next/script';
 import * as gtag from '../lib/gtag';
 
@@ -56,7 +56,7 @@ const EuiApp: FunctionComponent<AppProps> = ({ Component, pageProps }) => {
         {/* You can override this in other pages - see index.tsx for an example */}
         <title>Elastic Detection Rules Explorer</title>
       </Head>
-      <Global styles={globalStyes} />
+      <Global styles={globalStyles} />
       <Theme>
         <Chrome>
           <EuiErrorBoundary>

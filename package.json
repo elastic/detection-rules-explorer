@@ -8,22 +8,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "export": "next export",
+    "typecheck": "npm run typecheck:app && npm run typecheck:scripts",
+    "typecheck:app": "tsc --noEmit",
+    "typecheck:scripts": "tsc -p tsconfig.parseRuleData.json --noEmit"
   },
   "dependencies": {
     "@elastic/eui": "^111.1.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "core-js": "^3.48.0",
+    "moment": "^2.30.1",
+    "next": "^12.3.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-lazy-load": "^4.0.1",
-    "regenerator-runtime": "^0.14.1",
-    "tar": "^7.5.13",
-    "toml": "^3.0.0"
+    "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {
-    "@elastic/datemath": "^5.0.3",
     "@emotion/babel-plugin": "^11.13.5",
     "@next/bundle-analyzer": "^12.3.7",
     "@types/node": "^16.18.126",
@@ -36,14 +38,10 @@
     "eslint-plugin-prettier": "^4.2.5",
     "glob": "^7.2.0",
     "iniparser": "^1.0.5",
-    "moment": "^2.30.1",
-    "next": "^12.3.7",
-    "null-loader": "^4.0.1",
     "prettier": "^2.8.8",
-    "sass": "^1.97.3",
-    "serve": "^14.2.6",
-    "typescript": "^5.9.3",
-    "typescript-plugin-css-modules": "^5.2.0"
+    "tar": "^7.5.13",
+    "toml": "^3.0.0",
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "trim": "1.0.1",

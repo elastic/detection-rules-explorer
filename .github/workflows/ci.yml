@@ -1,0 +1,103 @@
+# Validates every pull request and every push to `main`.
+#
+# Until this workflow existed, the only automated check on the repository was the
+# deploy in `gh-pages.yml` — which runs *after* merge. Nothing verified a change
+# before it shipped.
+#
+# Two jobs, split by whether they need the generated rule data in `src/data/`:
+#
+#   checks  — lint + prebuild-script typecheck. No rule data required, no network
+#             beyond `npm ci`, so it returns in well under a minute.
+#   build   — regenerates `src/data/` from the live detection-rules tarball and
+#             statically renders every rule page. Slow, but it is the only
+#             end-to-end signal we have.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A superseded run is worthless here: the build compiles ~2200 static pages.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint and script typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # Only covers `parseRuleData.ts`, which has no dependency on generated
+      # data. The app typecheck lives in the `build` job below — see the comment
+      # there for why it cannot run this early.
+      - name: Typecheck prebuild script
+        run: npm run typecheck:scripts
+
+  build:
+    name: Build and app typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm run build` implicitly runs the `prebuild` lifecycle script first,
+      # which is what downloads the rules and writes `src/data/`. Build with
+      # PATH_PREFIX set so this exercises the same basePath configuration the
+      # deploy in gh-pages.yml uses.
+      - name: Build
+        env:
+          PATH_PREFIX: true
+        run: npm run build
+
+      # MUST run after the build. `src/pages/index.tsx` imports
+      # `src/data/newestRules.json`, which does not exist on a clean checkout, so
+      # `tsc --noEmit` fails with TS2307 until `prebuild` has run.
+      - name: Typecheck app
+        run: npm run typecheck:app
+
+      - name: Static export
+        run: npm run export
+
+      # TODO(PR 8a): add a `npm test` step here once the Vitest harness lands.
+
+      # Lets a reviewer diff the rendered site between two runs without building
+      # locally — see the parity-check recipe in CLEANUP_PLAN.md §2. Drop this
+      # step if the ~90 MB per pull request is not worth it.
+      - name: Upload rendered site
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: out-${{ github.event.pull_request.head.sha }}
+          path: out
+          retention-days: 7

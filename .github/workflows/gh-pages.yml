@@ -19,10 +19,13 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
-      - name: Use Node.js 20.19.3
+      # Node version comes from .nvmrc so CI, the deploy, and local `nvm use`
+      # cannot drift apart.
+      - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20.19.3'
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Installing my packages
         run: npm ci
