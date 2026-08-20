@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "export": "next export",
+    "typecheck": "npm run typecheck:app && npm run typecheck:scripts",
+    "typecheck:app": "tsc --noEmit",
+    "typecheck:scripts": "tsc -p tsconfig.parseRuleData.json --noEmit"
   },
   "dependencies": {
     "@elastic/eui": "^111.1.0",
