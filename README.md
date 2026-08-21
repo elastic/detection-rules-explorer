@@ -8,21 +8,24 @@ The explorer is publically available at https://elastic.github.io/detection-rule
 
 ## What rules are included?
 
-Elastic detection rules are included from these Elastic packages:
+All rules come from a single source: the [elastic/detection-rules](https://github.com/elastic/detection-rules/tree/main) repository. The prebuild script downloads that repository's tarball and ingests every TOML file under:
 
- - [Prebuilt Security Detection Rules](https://github.com/elastic/detection-rules/tree/main)
- - [Domain Generated Algorithm Detection](https://github.com/elastic/integrations/tree/main/packages/dga)
- - [Living off the Land Attack Detection](https://github.com/elastic/integrations/tree/main/packages/problemchild)
- - [Lateral Movement Detection](https://github.com/elastic/integrations/tree/main/packages/lmd)
- - [Data Exfiltration Detection](https://github.com/elastic/integrations/tree/main/packages/ded)
+ - `rules/` — prebuilt security detection rules
+ - `hunting/` — threat hunting queries
+ - `rules_building_block/` — building block rules
 
-## How do I getting started with development?
+Anything under a `_deprecated/` directory is skipped.
+
+Rules from the machine learning integration packages (`dga`, `problemchild`, `lmd`, `ded`) are **not** included. `parseRuleData.ts` contains an unused `getPackageRules()` helper for fetching them, but it has never been wired into the prebuild run, so those rules have never appeared on the site.
+
+## How do I get started with development?
 
 The site is built with GitHub Pages, Next.js and Elastic EUI, based on the [Elastic's Next.js EUI Starter](https://github.com/elastic/next-eui-starter).
 
 To run the local development environment:
 
 1. Get going with node:
+
 ```bash
 nvm use
 ```
@@ -33,7 +36,7 @@ nvm use
 npm run prebuild
 ```
 
-1. Start the development server:
+3. Start the development server:
 
 ```bash
 npm run dev
