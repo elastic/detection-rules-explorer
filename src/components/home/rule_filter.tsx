@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent } from 'react';
 import {
   EuiPanel,
   EuiHealth,
@@ -8,39 +8,36 @@ import {
 } from '@elastic/eui';
 import { ruleFilterStyles } from './rule_filter.styles';
 import { TagSummary } from '../../types';
-import { tagTypeTheme } from '../../lib/tags';
+import { TagTypeConfig } from '../../lib/tags';
 
 interface RuleFilterProps {
+  /** The taxonomy entry this control filters on: label, icon and colour. */
+  tagType: TagTypeConfig;
   tagList: TagSummary[];
   tagFilter: string[];
-  displayName: string;
-  icon: string;
   onTagChange: (type: string, selected: string[]) => void;
-  children?: ReactNode;
 }
 
 const RuleFilter: FunctionComponent<RuleFilterProps> = ({
+  tagType,
   tagList,
   tagFilter,
-  displayName,
-  icon,
   onTagChange,
 }) => {
+  const { displayName, icon } = tagType;
   const styles = ruleFilterStyles();
 
   const options = tagList.map(t => {
     return {
       value: t,
       label: `${t.tag_name} (${t.count})`,
-      color: tagTypeTheme(t.tag_type).color,
+      color: tagType.color,
     };
   });
 
   const selectedOptions = options.filter(o => {
     return tagFilter.includes(o.value.tag_full);
   });
-
-  const typeName = tagList.length > 0 ? tagList[0].tag_type : '';
 
   return (
     <EuiPanel css={styles.panel}>
@@ -59,8 +56,11 @@ const RuleFilter: FunctionComponent<RuleFilterProps> = ({
         selectedOptions={selectedOptions}
         isClearable={true}
         onChange={selected => {
+          // Previously derived from tagList[0], which meant an empty list
+          // passed '' -- and every tag "startsWith('')", so a change on an
+          // empty filter would have cleared every other filter too.
           onTagChange(
-            typeName,
+            tagType.type,
             selected.map(o => o.value.tag_full)
           );
         }}

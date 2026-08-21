@@ -1,4 +1,10 @@
-import { FunctionComponent, useState, useRef, ReactNode } from 'react';
+import {
+  ChangeEvent,
+  FunctionComponent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   EuiFlexGroup,
   EuiFlexItem,
@@ -19,17 +25,19 @@ import RuleFilter from './rule_filter';
 import { RuleSummary, TagSummary } from '../../types';
 import { TAG_TYPES, tagsForType } from '../../lib/tags';
 
-interface RuleFilterProps {
+/** How long to wait after typing stops before filtering the rule list. */
+const SEARCH_DEBOUNCE_MS = 100;
+
+interface HomeHeroProps {
   rules: RuleSummary[];
   tagSummaries: TagSummary[];
   searchFilter: string;
   tagFilter: string[];
-  onSearchChange: (e: string) => void;
+  onSearchChange: (value: string) => void;
   onTagChange: (type: string, selected: string[]) => void;
-  children?: ReactNode;
 }
 
-const HomeHero: FunctionComponent<RuleFilterProps> = ({
+const HomeHero: FunctionComponent<HomeHeroProps> = ({
   rules,
   tagSummaries,
   tagFilter,
@@ -39,17 +47,36 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
   const { euiTheme } = useEuiTheme();
   const styles = homeHeroStyles(euiTheme);
 
+  // The input is uncontrolled by the filter state so typing stays responsive;
+  // the expensive filter runs once typing pauses.
   const [displaySearchTerm, setDisplaySearchTerm] = useState('');
-  const searchUpdateTimeout = useRef(null);
+  const searchUpdateTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
-  const onSearchBoxChange = function (e) {
-    setDisplaySearchTerm(e.target.value);
+  // Without this, unmounting mid-debounce leaves a timer that fires into an
+  // unmounted component.
+  useEffect(
+    () => () => {
+      if (searchUpdateTimeout.current) {
+        clearTimeout(searchUpdateTimeout.current);
+      }
+    },
+    []
+  );
+
+  const onSearchBoxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    // Read the value out before the timeout: React pools nothing these days,
+    // but closing over the event is still needlessly fragile.
+    const value = event.target.value;
+    setDisplaySearchTerm(value);
     if (searchUpdateTimeout.current) {
       clearTimeout(searchUpdateTimeout.current);
     }
-    searchUpdateTimeout.current = setTimeout(() => {
-      onSearchChange(e.target.value);
-    }, 100);
+    searchUpdateTimeout.current = setTimeout(
+      () => onSearchChange(value),
+      SEARCH_DEBOUNCE_MS
+    );
   };
 
   return (
@@ -92,7 +119,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
             <EuiFieldSearch
               placeholder={`Search ${rules.length} rules by name`}
               value={displaySearchTerm}
-              onChange={e => onSearchBoxChange(e)}
+              onChange={onSearchBoxChange}
               fullWidth
             />
           </EuiPanel>
@@ -103,8 +130,7 @@ const HomeHero: FunctionComponent<RuleFilterProps> = ({
           {TAG_TYPES.map(tagType => (
             <RuleFilter
               key={tagType.type}
-              displayName={tagType.displayName}
-              icon={tagType.icon}
+              tagType={tagType}
               tagList={tagsForType(tagSummaries, tagType)}
               tagFilter={tagFilter}
               onTagChange={onTagChange}

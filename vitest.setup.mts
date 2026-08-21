@@ -21,8 +21,9 @@ class ImmediateIntersectionObserver {
 
   observe(target: Element): void {
     this.callback(
-      [{ isIntersecting: true, intersectionRatio: 1, target }] as unknown as
-        IntersectionObserverEntry[],
+      [
+        { isIntersecting: true, intersectionRatio: 1, target },
+      ] as unknown as IntersectionObserverEntry[],
       this as unknown as IntersectionObserver
     );
   }
@@ -36,3 +37,18 @@ class ImmediateIntersectionObserver {
 
 globalThis.IntersectionObserver =
   ImmediateIntersectionObserver as unknown as typeof IntersectionObserver;
+
+/**
+ * jsdom's `getContext('2d')` returns null, but EUI's `CanvasTextUtils` (used by
+ * EuiComboBox to size its input) assigns to `ctx.font` and calls
+ * `measureText`. Provide the small slice of the 2D context it needs; widths are
+ * approximated since jsdom does no layout anyway.
+ */
+const APPROX_CHAR_WIDTH = 6;
+
+HTMLCanvasElement.prototype.getContext = function getContext() {
+  return {
+    font: '',
+    measureText: (text: string) => ({ width: text.length * APPROX_CHAR_WIDTH }),
+  } as unknown as CanvasRenderingContext2D;
+} as typeof HTMLCanvasElement.prototype.getContext;

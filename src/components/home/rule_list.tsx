@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo, ReactNode } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import { EuiFlexGrid, EuiCallOut } from '@elastic/eui';
 import { ruleListStyles } from './rule_list.styles';
 import { useEuiTheme } from '@elastic/eui';
@@ -9,7 +9,6 @@ import { RuleSummary } from '../../types';
 
 interface RuleListProps {
   rules: RuleSummary[];
-  children?: ReactNode;
 }
 
 const MAX_RULES = 100;
@@ -25,9 +24,9 @@ const RuleList: FunctionComponent<RuleListProps> = ({ rules }) => {
   return (
     <>
       <EuiFlexGrid columns={4} css={styles.grid}>
-        {ruleSlice.map((r, i) => {
-          return <RulePanel key={i} rule={r} />;
-        })}
+        {ruleSlice.map(rule => (
+          <RulePanel key={rule.id} rule={rule} />
+        ))}
       </EuiFlexGrid>
       <EuiCallOut
         size="s"
