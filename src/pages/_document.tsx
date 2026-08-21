@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 import { defaultTheme, Theme, themeConfig } from '../lib/theme';

@@ -1,6 +1,9 @@
+import { UseEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-export const wrapperStyles = euiTheme => ({
+type EuiTheme = UseEuiTheme['euiTheme'];
+
+export const wrapperStyles = (euiTheme: EuiTheme) => ({
   content: css`
     display: flex;
     flex-direction: column;

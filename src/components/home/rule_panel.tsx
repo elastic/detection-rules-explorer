@@ -27,7 +27,7 @@ const RulePanel: FunctionComponent<RulePanelProps> = ({ rule }) => {
       <EuiPanel>
         <EuiText>
           <Link href={`/rules/${rule.id}`} passHref>
-            <EuiLink color="text" onClick={null} css={styles.link}>
+            <EuiLink color="text" css={styles.link}>
               {rule.name}
             </EuiLink>
           </Link>

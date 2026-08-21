@@ -61,12 +61,13 @@ const RuleFilter: FunctionComponent<RuleFilterProps> = ({
           // empty filter would have cleared every other filter too.
           onTagChange(
             tagType.type,
-            selected.map(o => o.value.tag_full)
+            // Every option above is constructed with a value.
+            selected.map(o => o.value!.tag_full)
           );
         }}
         renderOption={o => {
           return (
-            <EuiHealth color={o.value.count > 0 ? o.color : '#eeeeee'}>
+            <EuiHealth color={(o.value?.count ?? 0) > 0 ? o.color : '#eeeeee'}>
               {o.label}
             </EuiHealth>
           );

@@ -23,7 +23,7 @@ import * as gtag from '../lib/gtag';
 const EuiApp: FunctionComponent<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
   useEffect(() => {
-    const handleRouteChange = url => {
+    const handleRouteChange = (url: string) => {
       gtag.pageview(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);

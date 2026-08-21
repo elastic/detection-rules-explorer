@@ -7,8 +7,11 @@
     "skipLibCheck": true,
     "outDir": ".prebuild",
     "rootDir": ".",
-    "strict": false,
+    "strict": true,
     "resolveJsonModule": true
   },
-  "include": ["./scripts/prebuild/**/*.ts", "./src/types/**/*.ts"]
+  "include": [
+    "./scripts/prebuild/**/*.ts",
+    "./src/types/**/*.ts"
+  ]
 }

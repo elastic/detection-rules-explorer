@@ -6,24 +6,29 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import { getTheme, enableTheme } from '../lib/theme';
+import { defaultTheme, enableTheme, getTheme } from '../lib/theme';
 
 /**
  * React context for storing theme-related data and callbacks.
  * `colorMode` is `light` or `dark` and will be consumed by
  * various downstream components, including `EuiProvider`.
  */
-export const GlobalProvider = createContext<{
-  colorMode?: string;
-  setColorMode?: (_value: string) => void;
-}>({});
+interface ThemeContextValue {
+  colorMode: string;
+  setColorMode: (value: string) => void;
+}
+
+export const GlobalProvider = createContext<ThemeContextValue>({
+  colorMode: defaultTheme,
+  setColorMode: () => undefined,
+});
 
 interface ThemeProps {
   children: ReactNode;
 }
 
 export const Theme: FunctionComponent<ThemeProps> = ({ children }) => {
-  const [colorMode, setColorMode] = useState('light');
+  const [colorMode, setColorMode] = useState(defaultTheme);
 
   // on initial mount in the browser, use any theme from local storage
   useEffect(() => {

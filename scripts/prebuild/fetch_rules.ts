@@ -59,7 +59,7 @@ export async function fetchRuleFiles(
   const parser = response.data.pipe(new tar.Parser());
   const pending: Promise<void>[] = [];
 
-  parser.on('entry', entry => {
+  parser.on('entry', (entry: tar.ReadEntry) => {
     if (!isRulePath(entry.path)) {
       entry.resume();
       return;

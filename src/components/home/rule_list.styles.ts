@@ -1,6 +1,9 @@
+import { UseEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-export const ruleListStyles = euiTheme => ({
+type EuiTheme = UseEuiTheme['euiTheme'];
+
+export const ruleListStyles = (euiTheme: EuiTheme) => ({
   grid: css`
     padding-top: ${euiTheme.size.base};
     padding-bottom: ${euiTheme.size.base};

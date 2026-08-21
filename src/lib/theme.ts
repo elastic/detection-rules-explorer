@@ -18,8 +18,17 @@ export function enableTheme(newThemeName: string): void {
 
   for (const themeLink of getAllThemes()) {
     // Disable all theme links, except for the desired theme, which we enable
-    themeLink.disabled = themeLink.dataset.theme !== newThemeName;
-    themeLink['aria-disabled'] = themeLink.dataset.theme !== newThemeName;
+    const isDisabled = themeLink.dataset.theme !== newThemeName;
+    themeLink.disabled = isDisabled;
+    // `themeLink['aria-disabled'] = ...` used to be assigned here, which set a
+    // stray JS property and never touched the DOM -- so the attribute rendered
+    // by _document.tsx went stale as soon as the theme was switched. Mirror
+    // `disabled` properly instead.
+    if (isDisabled) {
+      themeLink.setAttribute('aria-disabled', 'true');
+    } else {
+      themeLink.removeAttribute('aria-disabled');
+    }
   }
 
   // Add a class to the `body` element that indicates which theme we're using.

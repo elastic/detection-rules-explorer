@@ -1,6 +1,9 @@
+import { UseEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-export const ruleDetailsStyles = euiTheme => ({
+type EuiTheme = UseEuiTheme['euiTheme'];
+
+export const ruleDetailsStyles = (euiTheme: EuiTheme) => ({
   container: css`
     max-width: 1200px;
     width: 100%;

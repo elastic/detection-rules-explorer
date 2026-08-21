@@ -10,7 +10,7 @@ import { fetchRuleFiles } from './fetch_rules';
 import { normalizeRule } from './normalize_rule';
 import { addTagSummary, sortByNewest, sortByPopularity } from './summarize';
 import { RuleSummaryInput, TagSummary } from './types';
-import { resetRulesDir, writeRule, writeSummaries } from './write_output';
+import { createWriter } from './write_output';
 
 /**
  * Guard rails. The count on 2026-08-20 was 2217 rules; anything under
@@ -27,14 +27,15 @@ async function prebuild(): Promise<void> {
   const ruleSummaries: RuleSummaryInput[] = [];
   const tagSummaries = new Map<string, TagSummary>();
   const failures: { path: string; message: string }[] = [];
+  const writer = createWriter();
 
-  resetRulesDir();
+  writer.resetRulesDir();
 
   await fetchRuleFiles(file => {
     try {
       const rule = normalizeRule(file.contents);
 
-      writeRule(rule.id, rule.document);
+      writer.writeRule(rule.id, rule.document);
       ruleSummaries.push({
         id: rule.id,
         name: rule.name,
@@ -98,7 +99,7 @@ async function prebuild(): Promise<void> {
     );
   }
 
-  writeSummaries(newestRules, popularTags);
+  writer.writeSummaries(newestRules, popularTags);
 }
 
 prebuild().catch(error => {

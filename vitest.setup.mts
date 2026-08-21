@@ -52,3 +52,13 @@ HTMLCanvasElement.prototype.getContext = function getContext() {
     measureText: (text: string) => ({ width: text.length * APPROX_CHAR_WIDTH }),
   } as unknown as CanvasRenderingContext2D;
 } as typeof HTMLCanvasElement.prototype.getContext;
+
+/**
+ * `next.config.js` injects THEME_CONFIG at build time via its `env` option, and
+ * `src/lib/theme.ts` JSON.parses it at module scope -- so simply importing that
+ * module outside a Next build throws. Provide an empty but valid config.
+ */
+process.env.THEME_CONFIG ??= JSON.stringify({
+  availableThemes: [],
+  copyConfig: [],
+});

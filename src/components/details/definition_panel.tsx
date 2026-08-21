@@ -19,6 +19,7 @@ import {
 } from '../../lib/rule_display';
 import { ruleTypeLabel } from '../../lib/rule_types';
 import { ruleDetailsStyles } from './rule_details.styles';
+import { CandidateItem, withContent } from './description_items';
 
 interface DefinitionPanelProps {
   rule: Rule;
@@ -43,7 +44,7 @@ const DefinitionPanel: FunctionComponent<DefinitionPanelProps> = ({ rule }) => {
 
   const integrations = relatedIntegrations(rule.metadata);
 
-  const items = [
+  const candidates: CandidateItem[] = [
     {
       title: 'Rule Type',
       description: ruleTypeLabel(rule.rule.type, rule.rule.language),
@@ -79,7 +80,9 @@ const DefinitionPanel: FunctionComponent<DefinitionPanelProps> = ({ rule }) => {
       title: 'Query',
       description: '',
     },
-  ].filter(item => item.title === 'Query' || item.description);
+  ];
+  // The Query row is a label only; its content is the code block below.
+  const items = withContent(candidates, ['Query']);
 
   return (
     <EuiFlexItem>

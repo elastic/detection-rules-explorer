@@ -1,6 +1,9 @@
+import { UseEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-export const homeHeroStyles = euiTheme => ({
+type EuiTheme = UseEuiTheme['euiTheme'];
+
+export const homeHeroStyles = (euiTheme: EuiTheme) => ({
   container: css`
     max-width: 1000px;
     margin: auto !important;

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent, MouseEvent } from 'react';
 import {
   EuiButton,
   EuiEmptyPrompt,
@@ -19,7 +19,7 @@ const NotFoundPage: FunctionComponent = () => {
 
   const router = useRouter();
 
-  const handleClick = e => {
+  const handleClick = (e: MouseEvent) => {
     e.preventDefault();
     router.back();
   };

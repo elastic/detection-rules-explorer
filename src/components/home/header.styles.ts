@@ -1,6 +1,9 @@
+import { UseEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-export const headerStyles = euiTheme => ({
+type EuiTheme = UseEuiTheme['euiTheme'];
+
+export const headerStyles = (euiTheme: EuiTheme) => ({
   logo: css`
     display: inline-flex;
     flex-wrap: wrap;

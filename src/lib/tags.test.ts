@@ -48,7 +48,7 @@ describe('TAG_TYPES', () => {
   });
 
   it('excludes the ML rule type from its filter, as before', () => {
-    const ruleType = TAG_TYPES.find(t => t.type === 'Rule Type');
+    const ruleType = TAG_TYPES.find(t => t.type === 'Rule Type')!;
     expect(ruleType?.excludeTagNames).toEqual(['ML']);
   });
 });
@@ -92,19 +92,19 @@ describe('tagsForType', () => {
   ];
 
   it('selects only the matching type', () => {
-    const domain = TAG_TYPES.find(t => t.type === 'Domain');
+    const domain = TAG_TYPES.find(t => t.type === 'Domain')!;
     expect(tagsForType(all, domain).map(t => t.tag_full)).toEqual([
       'Domain: Endpoint',
     ]);
   });
 
   it('applies excludeTagNames', () => {
-    const ruleType = TAG_TYPES.find(t => t.type === 'Rule Type');
+    const ruleType = TAG_TYPES.find(t => t.type === 'Rule Type')!;
     expect(tagsForType(all, ruleType).map(t => t.tag_name)).toEqual(['BBR']);
   });
 
   it('returns an empty list when nothing matches', () => {
-    const language = TAG_TYPES.find(t => t.type === 'Language');
+    const language = TAG_TYPES.find(t => t.type === 'Language')!;
     expect(tagsForType(all, language)).toEqual([]);
   });
 });

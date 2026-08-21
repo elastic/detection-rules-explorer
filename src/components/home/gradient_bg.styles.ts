@@ -1,6 +1,17 @@
 import { css } from '@emotion/react';
 
-export const gradientBgStyles = backgroundColors => ({
+/** The seven radial-gradient stops, pre-transparentized by the caller. */
+export interface GradientColors {
+  topLeft: string;
+  centerTop: string;
+  topRight: string;
+  centerMiddleLeft: string;
+  centerMiddleRight: string;
+  bottomRight: string;
+  bottomLeft: string;
+}
+
+export const gradientBgStyles = (backgroundColors: GradientColors) => ({
   gradientBg: css`
     position: relative;
     padding-top: 48px; // top nav

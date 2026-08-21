@@ -16,9 +16,14 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: false,
 });
 
-export const getStaticProps: GetStaticProps<{ rule: Rule }> = ({ params }) => ({
-  props: { rule: readRule(params.id as string) },
-});
+export const getStaticProps: GetStaticProps<{ rule: Rule }> = ({ params }) => {
+  const id = params?.id;
+  if (typeof id !== 'string') {
+    // Unreachable: every path comes from getStaticPaths with fallback: false.
+    throw new Error(`Expected a rule id, received ${JSON.stringify(params)}`);
+  }
+  return { props: { rule: readRule(id) } };
+};
 
 export default function RuleDetails({
   rule,

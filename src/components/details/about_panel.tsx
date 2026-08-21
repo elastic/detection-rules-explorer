@@ -15,6 +15,7 @@ import { Rule } from '../../types';
 import { severityColor } from '../../lib/rule_display';
 import RuleTagBadges from '../rule_tag_badges';
 import { ruleDetailsStyles } from './rule_details.styles';
+import { CandidateItem, withContent } from './description_items';
 
 const ELASTIC_LICENSE_URL = 'https://www.elastic.co/licensing/elastic-license';
 
@@ -30,7 +31,7 @@ const AboutPanel: FunctionComponent<AboutPanelProps> = ({ rule }) => {
   const { euiTheme } = useEuiTheme();
   const styles = ruleDetailsStyles(euiTheme);
 
-  const items = [
+  const candidates: CandidateItem[] = [
     {
       title: 'Tags',
       description: (
@@ -94,7 +95,8 @@ const AboutPanel: FunctionComponent<AboutPanelProps> = ({ rule }) => {
         </EuiLink>
       ),
     },
-  ].filter(item => item.description);
+  ];
+  const items = withContent(candidates);
 
   return (
     <EuiFlexItem>
