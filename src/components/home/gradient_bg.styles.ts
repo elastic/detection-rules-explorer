@@ -16,7 +16,8 @@ export const gradientBgStyles = (backgroundColors: GradientColors) => ({
     position: relative;
     padding-top: 48px; // top nav
     min-height: 100vh;
-    background: radial-gradient(
+    background:
+      radial-gradient(
         circle 600px at top left,
         ${backgroundColors.topLeft},
         transparent

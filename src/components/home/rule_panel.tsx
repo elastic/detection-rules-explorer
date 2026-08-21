@@ -26,7 +26,13 @@ const RulePanel: FunctionComponent<RulePanelProps> = ({ rule }) => {
     <EuiFlexItem css={styles.item}>
       <EuiPanel>
         <EuiText>
-          <Link href={`/rules/${rule.id}`} passHref>
+          {/*
+            `legacyBehavior` keeps Link cloning its child and passing href down.
+            Without it, EuiLink gets no href and renders a <button>, giving
+            invalid <a><button> markup. Next 16 removes this prop, at which
+            point EuiLink needs the href directly plus manual basePath handling.
+          */}
+          <Link href={`/rules/${rule.id}`} passHref legacyBehavior>
             <EuiLink color="text" css={styles.link}>
               {rule.name}
             </EuiLink>

@@ -22,13 +22,13 @@ const Header = () => {
       sections={[
         {
           items: [
-            <Link key="logo-eui" href="/" passHref>
-              <a css={styles.logo}>
-                <EuiIcon type="logoSecurity" size="l" />
-                <EuiTitle size="xxs" css={styles.title}>
-                  <span>Elastic Security Detection Rules</span>
-                </EuiTitle>
-              </a>
+            // Next 13+ Link renders its own <a>; the old nested anchor
+            // produced invalid <a><a> markup once passHref stopped cloning.
+            <Link key="logo-eui" href="/" css={styles.logo}>
+              <EuiIcon type="logoSecurity" size="l" />
+              <EuiTitle size="xxs" css={styles.title}>
+                <span>Elastic Security Detection Rules</span>
+              </EuiTitle>
             </Link>,
           ],
         },

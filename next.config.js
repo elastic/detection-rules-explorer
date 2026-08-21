@@ -1,27 +1,37 @@
-/* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/no-use-before-define,@typescript-eslint/no-empty-function,prefer-template */
 const crypto = require('crypto');
 const fs = require('fs');
-const glob = require('glob');
 const path = require('path');
-const iniparser = require('iniparser');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { IgnorePlugin } = require('webpack');
 
 /**
- * If you are deploying your site under a directory other than `/` e.g.
- * GitHub pages, then you have to tell Next where the files will be served.
- * We don't need this during local development, because everything is
- * available under `/`.
+ * When deploying under a subdirectory (GitHub Pages serves this repo at
+ * /detection-rules-explorer) Next has to be told, or every asset URL is wrong.
+ * Local development serves from `/`, so the default is empty.
+ *
+ * Set PATH_PREFIX to the prefix itself, e.g. `/detection-rules-explorer`. For
+ * compatibility with the previous flag, `PATH_PREFIX=true` still resolves to
+ * the default prefix below.
+ *
+ * This used to be derived by parsing `.git/config` with `iniparser` to read the
+ * origin URL. That silently produced a different prefix depending on how the
+ * repository had been cloned -- the classic "works locally, breaks in CI" trap.
  */
-const usePathPrefix = process.env.PATH_PREFIX === 'true';
+const DEFAULT_PATH_PREFIX = '/detection-rules-explorer';
 
-const pathPrefix = usePathPrefix ? derivePathPrefix() : '';
+const pathPrefix = resolvePathPrefix(process.env.PATH_PREFIX);
 
 const themeConfig = buildThemeConfig();
 
 const nextConfig = {
+  /**
+   * Static HTML export. Next 13 removed the separate `next export` command in
+   * favour of this, so `npm run build` now produces `out/` on its own.
+   */
+  output: 'export',
+
   compiler: {
     emotion: true,
   },
@@ -34,10 +44,6 @@ const nextConfig = {
    * transparent to (almost all of) the rest of the application.
    */
   basePath: pathPrefix,
-
-  images: {
-    loader: 'custom',
-  },
 
   /**
    * Set custom `process.env.SOMETHING` values to use in the application.
@@ -142,16 +148,26 @@ module.exports = withBundleAnalyzer({
  * @return {ThemeConfig}
  */
 function buildThemeConfig() {
-  const themeFiles = glob.sync(
-    path.join(
-      __dirname,
-      'node_modules',
-      '@elastic',
-      'eui',
-      'dist',
-      'eui_theme_*.min.css'
-    )
+  const themeDir = path.join(
+    __dirname,
+    'node_modules',
+    '@elastic',
+    'eui',
+    'dist'
   );
+
+  // Was `glob.sync('eui_theme_*.min.css')`. glob v9 removed the sync export and
+  // this is the only call site, so the dependency is not worth carrying.
+  //
+  // NOTE: as of @elastic/eui 111 this directory does not exist -- EUI no longer
+  // ships prebuilt theme stylesheets, it is CSS-in-JS throughout. glob.sync
+  // silently returned [] for a missing directory, so match that rather than
+  // throwing. See defect D17 in CLEANUP_PLAN.md: the entire theme-<link>
+  // mechanism is dead code today.
+  const themeFiles = (fs.existsSync(themeDir) ? fs.readdirSync(themeDir) : [])
+    .filter(name => /^eui_theme_.*\.min\.css$/.test(name))
+    .sort()
+    .map(name => path.join(themeDir, name));
 
   const themeConfig = {
     availableThemes: [],
@@ -207,49 +223,21 @@ function hashFile(filePath) {
 }
 
 /**
- * This starter assumes that if `usePathPrefix` is true, then you're serving the site
- * on GitHub pages. If that isn't the case, then you can simply replace the call to
- * this function with whatever is the correct path prefix.
+ * Resolve the configured base path.
  *
- * The implementation attempts to derive a path prefix for serving up a static site by
- * looking at the following in order.
+ * - unset or empty -> '' (local development, served from /)
+ * - 'true'         -> the default prefix (what the old flag meant)
+ * - anything else  -> used verbatim, so forks can override it
  *
- *    1. The git config for "origin"
- *    2. The `name` field in `package.json`
- *
- * Really, the first should be sufficient and correct for a GitHub Pages site, because the
- * repository name is what will be used to serve the site.
+ * @param {string | undefined} value
+ * @return {string}
  */
-function derivePathPrefix() {
-  const gitConfigPath = path.join(__dirname, '.git', 'config');
-
-  if (fs.existsSync(gitConfigPath)) {
-    const gitConfig = iniparser.parseSync(gitConfigPath);
-
-    if (gitConfig['remote "origin"'] != null) {
-      const originUrl = gitConfig['remote "origin"'].url;
-
-      // eslint-disable-next-line prettier/prettier
-      return (
-        '/' +
-        originUrl
-          .split('/')
-          .pop()
-          .replace(/\.git$/, '')
-      );
-    }
+function resolvePathPrefix(value) {
+  if (!value) {
+    return '';
   }
-
-  const packageJsonPath = path.join(__dirname, 'package.json');
-
-  if (fs.existsSync(packageJsonPath)) {
-    const { name: packageName } = require(packageJsonPath);
-    // Strip out any username / namespace part. This works even if there is
-    // no username in the package name.
-    return '/' + packageName.split('/').pop();
+  if (value === 'true') {
+    return DEFAULT_PATH_PREFIX;
   }
-
-  throw new Error(
-    "Can't derive path prefix, as neither .git/config nor package.json exists"
-  );
+  return value.startsWith('/') ? value : `/${value}`;
 }

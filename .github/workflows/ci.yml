@@ -76,12 +76,12 @@ jobs:
         run: npm ci
 
       # `npm run build` implicitly runs the `prebuild` lifecycle script first,
-      # which is what downloads the rules and writes `src/data/`. Build with
-      # PATH_PREFIX set so this exercises the same basePath configuration the
-      # deploy in gh-pages.yml uses.
+      # which is what downloads the rules and writes `src/data/`. With
+      # `output: 'export'` this also writes out/, so there is no separate export
+      # step. PATH_PREFIX matches what the deploy in gh-pages.yml uses.
       - name: Build
         env:
-          PATH_PREFIX: true
+          PATH_PREFIX: /detection-rules-explorer
           # The prebuild script fetches the detection-rules tarball; the
           # anonymous endpoint is rate-limited.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,9 +92,6 @@ jobs:
       # `tsc --noEmit` fails with TS2307 until `prebuild` has run.
       - name: Typecheck app
         run: npm run typecheck:app
-
-      - name: Static export
-        run: npm run export
 
       # Lets a reviewer diff the rendered site between two runs without building
       # locally — see the parity-check recipe in CLEANUP_PLAN.md §2. Drop this

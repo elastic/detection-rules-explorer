@@ -28,14 +28,15 @@ const Chrome: FunctionComponent<ChromeProps> = ({ children }) => {
     key: 'eui',
     container:
       typeof document !== 'undefined'
-        ? document.querySelector('meta[name="eui-styles"]') ?? undefined
+        ? (document.querySelector('meta[name="eui-styles"]') ?? undefined)
         : undefined,
   });
   const utilityCache = createCache({
     key: 'util',
     container:
       typeof document !== 'undefined'
-        ? document.querySelector('meta[name="eui-styles-utility"]') ?? undefined
+        ? (document.querySelector('meta[name="eui-styles-utility"]') ??
+          undefined)
         : undefined,
   });
 
