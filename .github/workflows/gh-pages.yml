@@ -33,6 +33,9 @@ jobs:
       - name: Build my App
         env:
           PATH_PREFIX: true
+          # The prebuild script fetches the detection-rules tarball; the
+          # anonymous endpoint is rate-limited.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build && npm run export && touch ./out/.nojekyll
 
       - name: Deploy 🚀

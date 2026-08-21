@@ -1,0 +1,10 @@
+[hunt]
+author = ["Elastic"]
+description = "Detects low volume external network connections by process."
+integration = ["endpoint"]
+uuid = "99999999-8888-7777-6666-555555555555"
+name = "Low Volume External Network Connections"
+language = ["ES|QL"]
+license = "Elastic License v2"
+mitre = ["TA0011", "T1071", "T1071.001"]
+query = ["from logs-endpoint.events.network-* | limit 10"]

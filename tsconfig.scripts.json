@@ -10,5 +10,5 @@
     "strict": false,
     "resolveJsonModule": true
   },
-  "include": ["./parseRuleData.ts"]
+  "include": ["./scripts/prebuild/**/*.ts", "./src/types/**/*.ts"]
 }

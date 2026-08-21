@@ -82,6 +82,9 @@ jobs:
       - name: Build
         env:
           PATH_PREFIX: true
+          # The prebuild script fetches the detection-rules tarball; the
+          # anonymous endpoint is rate-limited.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
 
       # MUST run after the build. `src/pages/index.tsx` imports
